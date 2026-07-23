@@ -63,7 +63,8 @@ were only partially retrievable — skim that badge directly.
   - Solves three pains: data silos, unreliable insights, poor actionability
     (delay between insight and action).
   - **Zero-Copy Architecture** shares/accesses external data (warehouses/lakes)
-    via bidirectional connection without duplicating it — vs. legacy ETL copy.
+    in place without duplicating it (Federation = data in, Data Sharing = data
+    out; together they are the two-way capability) — vs. legacy ETL copy.
   - Real-time processing updates unified profiles in **under one second**.
 - **Why it matters for the exam:** Tests characterizing Data 360 as broader
   than a CDP and the specific silos/insight/action value framing.
@@ -259,9 +260,12 @@ were only partially retrievable — skim that badge directly.
 - **Source:** https://trailhead.salesforce.com/content/learn/modules/data-cloud-explore-the-data-landscape/explore-the-stages-of-data-cloud
 - **Type:** Trailhead module · **Source confidence:** direct
   - **In depth:** Zero-Copy Federation is the capability that lets Data 360
-    query data where it already lives in an external lake or warehouse through
-    a bidirectional connection, rather than physically copying it in — which
-    is precisely what makes it a differentiator against legacy ETL. The
+    query data where it already lives in an external lake or warehouse,
+    accessing it in place rather than physically copying it in — which
+    is precisely what makes it a differentiator against legacy ETL. (Federation
+    is the data-**in** direction; its counterpart, Zero Copy Data Sharing, is
+    the data-**out** direction, and the two together give Zero Copy its two-way
+    character — do not call Federation itself "bidirectional.") The
     decision every scenario tests is federation versus ingestion: choose
     zero-copy when the data must remain in its system of record for
     compliance, cost, or freshness reasons and only needs to be referenced at
@@ -272,8 +276,9 @@ were only partially retrievable — skim that badge directly.
     deliberately does not.
 - **Key facts:**
   - Zero Copy Federation queries data **in place** in external lakes/warehouses
-    via bidirectional connection — distinct from the 275+ ingestion connectors,
-    which **do** copy/land data.
+    (the data-**in** direction) — distinct from the 275+ ingestion connectors,
+    which **do** copy/land data. (Two-way access is Zero Copy as a whole:
+    Federation brings data in, Data Sharing exposes Data 360 data out.)
   - **Decision boundary:** use Zero Copy when data must stay in the system of
     record (compliance/cost/freshness) and only needs referencing at query
     time; use ingestion when data must be unified/transformed/persisted for
@@ -489,9 +494,11 @@ data-stream error codes need live-doc verification before exam day.
     within one region and does not create true residency separation and does
     not unify or merge records, which is why the recurring trap distinguishes
     a data space (brand segregation), a separate org (residency), and Data
-    Cloud One (cross-org sharing). Data shares are a distinct mechanism for
-    externally sharing objects and underpin Data Cloud One rather than in-org
-    isolation.
+    Cloud One (cross-org sharing). Data shares are a distinct mechanism again:
+    they define which Data Cloud objects (DMOs/DLOs) are exposed to an
+    **external** consumer for Zero-Copy, query-in-place access — not a form of
+    in-org isolation, and not what powers Data Cloud One (whose sharing unit is
+    the data space).
 - **Key facts:**
   - Every org gets **one default data space** (cannot delete; can rename).
   - Only **Data Cloud Architects & System Admins** create/edit/delete spaces.
@@ -501,8 +508,11 @@ data-stream error codes need live-doc verification before exam day.
     surface into multiple spaces, but downstream config is built per space.
   - Data spaces do **NOT** solve true **data residency** (needs a separate
     org/instance) and do **NOT** unify/merge data (they partition).
-  - **Data shares** are distinct — define which objects are shared externally
-    (underlies Data Cloud One).
+  - **Data shares** are distinct — a **Zero-Copy** mechanism defining which
+    objects (DMOs/DLOs) are exposed to an **external** consumer (e.g. Snowflake,
+    BigQuery, Databricks) to query **in place, no copy**; paired with a **Data
+    Share Target** (the recipient). This is **outbound external sharing**, NOT
+    the basis of **Data Cloud One** (whose sharing unit is the **data space**).
 - **Why it matters for the exam:** "residency vs brand segregation vs cross-org
   sharing" → space vs new org vs Data Cloud One.
 - **Related:** Data Cloud One; Packaging.
@@ -532,7 +542,9 @@ data-stream error codes need live-doc verification before exam day.
     it auto-becomes home; (3) multiple have it → pick ONE home and
     **deprovision** the others (can take months; risks data loss).
   - Add the free **Data Cloud One Companion Org SKU** to companions; the
-    companion app exposes only select features.
+    companion app exposes only a **predefined/limited subset** of Data 360
+    features (Salesforce-determined, NOT customer-selected — the home org keeps
+    full functionality).
 - **Why it matters for the exam:** Consolidation scenario → choose one home,
   deprovision others (time/risk trap).
 - **Related:** Data Spaces; Provisioning (region).
@@ -775,7 +787,7 @@ confirm exact cadences in-org.
 - **Source:** https://www.salesforce.com/data/connectivity/data-cloud-connectors/
 - **Type:** Salesforce Doc · **Source confidence:** triangulated
   - **In depth:** A connector is the pluggable adapter that tells Data 360 how
-    to reach a given system, and Salesforce ships 270+ of them so that almost
+    to reach a given system, and Salesforce ships 200+ of them so that almost
     any source can feed the platform without custom code. What matters
     conceptually is that connectors fall into four families
     (Salesforce-native, Connector Service like MuleSoft and the Ingestion API,
@@ -787,7 +799,7 @@ confirm exact cadences in-org.
     scenario questions are really asking you to name the right family plus
     whether the data is copied in or federated in place.
 - **Key facts:**
-  - 270+ connectors: native, via MuleSoft, via APIs, via SDKs; support batch,
+  - 200+ connectors: native, via MuleSoft, via APIs, via SDKs; support batch,
     streaming, or real-time.
   - Families: (1) **Salesforce** — CRM, MCE, MC Account Engagement (Pardot), MC
     Personalization, B2C Commerce, Omnichannel Inventory, Data Cloud One; (2)
@@ -897,8 +909,10 @@ confirm exact cadences in-org.
     near-real-time micro-batches suited to CDC, webhooks, and event streams,
     and the common hybrid pattern is to bulk-load history once and then stream
     ongoing changes. The exam-critical detail is the Salesforce CRM
-    connector's baseline behavior: incremental delta refreshes roughly every
-    ten minutes with an automatic bi-weekly full refresh, plus an optional
+    connector's baseline behavior: incremental delta refreshes on a set
+    schedule with an automatic periodic full refresh on a **configurable
+    interval** (10-day default; also None / 25 / 50 days — historically a fixed
+    two-week cycle), plus an optional
     streaming mode; when a question says sub-minute event freshness choose
     streaming, and when it says one-time historical load choose batch.
 - **Key facts:**
@@ -907,14 +921,16 @@ confirm exact cadences in-org.
   - **Streaming**: near-real-time micro-batches (~3 min for Ingestion API);
     CDC/webhooks/event streams.
   - Hybrid: bulk-load history once, then stream ongoing changes.
-  - **Salesforce CRM connector:** incremental (delta) refresh ~**every 10 min**;
-    full refresh automatically **bi-weekly**; a **streaming mode** exists (no
+  - **Salesforce CRM connector:** incremental (delta) refresh on a set
+    automatic schedule; periodic full refresh runs automatically on a
+    **configurable interval** (**10-day default**; also None / 25 / 50 days —
+    was historically a fixed two-week cycle); a **streaming mode** exists (no
     periodic full-refresh interval configurable in that mode).
   - Custom schedules: 5/10/30 min, hourly, daily, weekly, monthly (connector
     dependent).
 - **Why it matters for the exam:** "sub-minute freshness from events" vs
-  "one-time historical load" → streaming vs batch; know CRM's ~10-min/bi-weekly
-  baseline.
+  "one-time historical load" → streaming vs batch; know CRM's incremental +
+  configurable-interval full-refresh baseline (10-day default).
 - **Related:** Ingestion API limits.
 
 ### Zero Copy Data Federation — Query vs File Federation
@@ -1340,9 +1356,14 @@ DMO; Unified Individual vs Unified Link; deterministic vs "probabilistic."
   - Match rule = **Object + Field + Match Method**. Eligible objects: Individual,
     Contact Point Address/App/Email/Phone/Social, Party Identification (must be
     mapped first).
-  - **Three match methods, all deterministic:** **Exact** (identical, e.g.
-    loyalty ID), **Fuzzy** (typo-tolerant — **First Name only**), **Normalized**
-    (same value regardless of formatting — email/phone/address).
+  - **Three match methods (treat as rule-based/deterministic for the exam):**
+    **Exact** (identical, e.g. loyalty ID), **Fuzzy** (typo-tolerant — **First
+    Name only**), **Normalized** (same value regardless of formatting —
+    email/phone/address).
+    - *Nuance:* Exact/Normalized are strictly deterministic; **Fuzzy** actually
+      uses Salesforce AI/ML under the hood (selectable Low/Med/High precision),
+      so it isn't purely deterministic — but the exam-expected answer is still
+      "rule-based, not a configurable probabilistic engine."
   - Limits: up to **10 match rules/ruleset**, each up to **10 match criteria**.
   - Records need to satisfy **only ONE** match rule (rules OR'd); criteria within
     a rule are AND'd.
@@ -1360,21 +1381,26 @@ DMO; Unified Individual vs Unified Link; deterministic vs "probabilistic."
     high confidence when data is clean, whereas probabilistic matching uses
     statistical inference to guess at matches when identifiers are missing,
     trading certainty for coverage and requiring large data volumes. The
-    load-bearing fact for the exam is that all of Data 360's native match
-    methods — Exact, Fuzzy, and Normalized — are deterministic and rule-based;
-    the platform ships with no out-of-the-box probabilistic or ML
-    confidence-score matching engine. The mistake questions are engineered to
-    catch is equating "Fuzzy" with "probabilistic": Fuzzy still applies a
-    fixed rule to tolerate typos, so any answer describing Data 360 as doing
-    probabilistic matching is wrong.
+    load-bearing fact for the exam is that Data 360's matching is rule-based:
+    you configure Object + Field + Match Method with AND/OR logic, not a
+    probabilistic confidence-score engine that scores arbitrary fields. The
+    mistake questions are engineered to catch is equating this with classic
+    "probabilistic matching" — so any answer describing Data 360 as running a
+    configurable probabilistic/statistical matching engine is wrong.
+    (Real-world nuance, unlikely to be tested but good to know: **Fuzzy**
+    first-name matching does use Salesforce AI/ML under the hood — an
+    LLM-derived model with Low/Med/High precision levels — so Fuzzy itself is
+    not purely deterministic, even though the ruleset framework around it is.)
 - **Key facts:**
   - Deterministic = explicit identifiers, high confidence, needs clean data.
   - Probabilistic = statistical/fuzzy inference when identifiers are absent;
     trades certainty for coverage; needs large volumes.
-  - **Data 360's native match rules (Exact/Fuzzy/Normalized) are all
-    deterministic** — "Fuzzy" tolerates typos but is still rule-based, **NOT
-    probabilistic**. Data 360 has no out-of-the-box probabilistic/ML confidence-
-    score matching engine.
+  - **Data 360's matching is rule-based (Object + Field + Match Method, AND/OR
+    logic) — NOT a configurable probabilistic/statistical engine.** Exact and
+    Normalized are strictly deterministic; **Fuzzy** (First Name only) is the
+    exception — it uses Salesforce AI/ML with Low/Med/High precision, so it is
+    not purely deterministic. Exam answer: treat matching as deterministic/rule-
+    based; you cannot build a general probabilistic confidence-score match rule.
 - **Why it matters for the exam:** "probabilistic matching" is a distractor for
   Data 360 match rules — don't confuse fuzzy with probabilistic.
 - **Related:** Match rules; rulesets.
@@ -1436,8 +1462,11 @@ DMO; Unified Individual vs Unified Link; deterministic vs "probabilistic."
     **Unified Link Individual DMO** (bridge linking each source Individual to its
     Unified Individual — enables tracing unified → all sources); **Unified
     Individual DMO** (final reconciled attributes, lineage lives in the Link).
-  - Unified Individual ↔ Unified Link have a 1:1 (per source record) relationship
-    — together = the **Unified Profile**.
+  - Cardinality: each **source** Individual record maps to exactly **one**
+    Unified Link record (1:1 per source), but a single **Unified Individual**
+    has **many** Unified Link records — one per linked source (one-to-many).
+    Unified Individual + its Unified Link records together = the **Unified
+    Profile**.
   - **Unified profile ≠ golden record**: it's a "key ring" linking source
     identities **without collapsing/destroying** them — sources stay intact and
     addressable (faster/more scalable than classic MDM).
@@ -1943,8 +1972,9 @@ Trailhead points — data actions/Flow automation is heavily emphasized.
     its targets, and Data 360 gives you two cadences that differ in speed,
     capacity, and reversibility. Standard publishing runs on a 12-to-24-hour
     rhythm and can reach back across a long window of engagement data, whereas
-    Rapid publishing runs on tighter 1-hour or 4-hour intervals with a
-    configurable lookback and an incremental refresh mode, but it is capped
+    Rapid publishing runs on tighter 1-hour or 4-hour intervals — using only a
+    fixed last-7-days engagement-data window (unlike standard publish's
+    configurable lookback) with an incremental refresh mode — but it is capped
     per org — making it a scarce resource you allocate to your most
     time-sensitive audiences. The exam frequently tests the one-way
     constraint: once a segment is created as Standard you cannot promote it to
@@ -1954,9 +1984,10 @@ Trailhead points — data actions/Flow automation is heavily emphasized.
     storage as well — a correction the exam may probe directly.
 - **Key facts:**
   - **Standard:** every **12–24 hrs**; up to last **2 years** of Engagement data.
-  - **Rapid:** runs on a daily schedule at a **1-hour or 4-hour interval**;
-    **max 20 rapid segments/org**; prioritized in the publish queue; supports a
-    configurable **lookback window** and **Incremental Refresh** mode.
+  - **Rapid:** runs on a **1-hour or 4-hour interval**;
+    **max 20 rapid segments/org**; prioritized in the publish queue; uses a
+    **fixed 7-day engagement-data lookback** (NOT the configurable lookback of
+    standard publish) and supports **Incremental Refresh** mode.
   - **Rapid targets:** Marketing Cloud Engagement, Data Cloud, **or file
     storage** (Amazon S3, Azure, SFTP, GCS) — *corrected: not MCE-only.*
     Standard + rapid both activate as **data extensions** in MCE.

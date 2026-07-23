@@ -111,7 +111,7 @@ Trailhead ("Dive Deep into Data Source Connection and Ingestion") → [training-
 Mastery checks:
 - [ ] The **DSO → DLO → DMO** pipeline and 3 stream categories (Profile/
       Engagement/Other) + why category is immutable
-- [ ] Batch vs streaming ingestion + CRM connector cadence (~10 min / bi-weekly)
+- [ ] Batch vs streaming ingestion + CRM connector cadence (incremental + configurable full-refresh interval, 10-day default)
 - [ ] **Query vs File federation** (compute location, cost, caching)
 - [ ] Zero Copy vs ingestion decision boundary
 - [ ] What FQKs solve (cross-source key collisions into one DMO)

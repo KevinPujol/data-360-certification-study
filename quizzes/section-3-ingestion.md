@@ -81,7 +81,7 @@
 **Q12.** A company uses the standard Salesforce CRM connector to sync Contacts and Opportunities. They ask how often data refreshes and whether they can force different cadences. Which statement is accurate?
 
 - A. The CRM connector only supports a manual refresh triggered by an admin
-- B. Incremental refresh runs about every 10 minutes and a full refresh runs automatically bi-weekly; custom schedules (5/10/30 min, hourly, daily, weekly, monthly) are also available
+- B. Incremental refresh runs on a set automatic schedule and a periodic full refresh runs automatically on a configurable interval (10-day default; also None / 25 / 50 days); custom schedules (5/10/30 min, hourly, daily, weekly, monthly) are also available
 - C. The CRM connector refreshes only once per day and cannot be changed
 - D. Incremental refresh runs every 3 minutes, matching the Ingestion API streaming cadence
 
@@ -110,4 +110,4 @@
 
 **Q11: B** — Data Stream -> DSO (raw/staging) -> DLO (materialized, typed, columnar Parquet) -> DMO (harmonized view mapped to the canonical model). The other orderings scramble the object roles.
 
-**Q12: B** — The CRM connector runs incremental refresh ~every 10 minutes and a full refresh automatically bi-weekly, and custom schedules (5/10/30 min, hourly, daily, weekly, monthly) are supported. It is not manual-only (A), not once-daily fixed (C), and its incremental cadence is ~10 min, not the 3-min Ingestion API streaming cadence (D).
+**Q12: B** — The CRM connector runs incremental refresh on a set automatic schedule, and its periodic full refresh runs automatically on a **configurable interval** (10-day default; also None / 25 / 50 days — historically a fixed two-week cycle), with custom schedules (5/10/30 min, hourly, daily, weekly, monthly) supported. It is not manual-only (A), not once-daily fixed (C), and its incremental cadence is not the 3-min Ingestion API streaming cadence (D).
