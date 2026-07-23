@@ -78,9 +78,16 @@
     .lesson-intro p { margin: 0; color: #d5e3e8; }
     .lesson-card { padding: 24px 26px; margin-bottom: 12px; background: var(--card); border: 1px solid var(--line); border-radius: 15px; }
     .lesson-card h3 { margin: 0 0 14px; font-size: 18px; letter-spacing: -.025em; }
+    .lesson-card .explainer { margin: 0 0 16px; color: #33443f; font-size: 14.5px; line-height: 1.62; }
+    .lesson-card .facts-label { font-size: 11px; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; color: var(--green); margin-bottom: 8px; }
     .lesson-card ul { padding-left: 20px; margin: 0; color: #40514c; line-height: 1.58; }
     .lesson-card li + li { margin-top: 8px; }
     .why { margin-top: 17px; padding: 12px 14px; background: var(--orange-2); border-left: 3px solid var(--orange); border-radius: 3px 9px 9px 3px; font-size: 12px; line-height: 1.5; }
+    .source-chip { display: inline-flex; align-items: center; gap: 8px; margin-top: 15px; padding: 7px 12px; background: var(--green-2); border: 1px solid #bfe0d5; border-radius: 99px; color: var(--green); font-size: 12px; font-weight: 700; text-decoration: none; transition: .16s ease; }
+    .source-chip:hover { background: #cbe9df; transform: translateY(-1px); }
+    .source-chip .conf { font-size: 10px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; padding: 2px 7px; border-radius: 99px; background: #b7d8cc; color: #0a5747; }
+    .source-chip .conf-triangulated { background: var(--orange-2); color: #a2521f; }
+    .source-chip .conf-needsverification, .source-chip .conf-inferred { background: #f2d9d5; color: #9a3f34; }
     .bookmark { float: right; border: 0; background: transparent; color: #89958f; font-size: 20px; cursor: pointer; }
     .bookmark.saved { color: var(--orange); }
     .quiz-shell { max-width: 920px; margin: 0 auto; }
@@ -280,15 +287,18 @@
       });
       const section = DATA.training.find(s => s.id === currentLesson);
       const term = query.trim().toLowerCase();
-      const cards = section.cards.filter(card => !term || `${card.title} ${card.facts.join(" ")} ${card.why}`.toLowerCase().includes(term));
+      const cards = section.cards.filter(card => !term || `${card.title} ${card.explainer} ${card.facts.join(" ")} ${card.why}`.toLowerCase().includes(term));
       $("#lessonContent").innerHTML = `
         <div class="lesson-intro"><div class="eyebrow">Section ${section.id}</div><h2>${esc(SECTION_NAMES[section.id])}</h2><p>${section.cards.length} focused concept cards · ${DATA.stages.find(s => s.id === section.id)?.weight}% of the exam</p></div>
         ${cards.length ? cards.map((card, i) => `
           <article class="lesson-card" id="lesson-${section.id}-${i}">
             <button class="bookmark ${state.bookmark.card === `${section.id}-${i}` ? "saved" : ""}" data-bookmark="${section.id}-${i}" title="Bookmark this lesson">◆</button>
             <h3>${esc(card.title)}</h3>
+            ${card.explainer ? `<p class="explainer">${esc(card.explainer)}</p>` : ""}
+            <div class="facts-label">Key facts</div>
             <ul>${card.facts.map(f => `<li>${esc(f)}</li>`).join("")}</ul>
             ${card.why ? `<div class="why"><strong>Exam lens:</strong> ${esc(card.why)}</div>` : ""}
+            ${card.source ? `<a class="source-chip" href="${esc(card.source)}" target="_blank" rel="noopener">↗ Read the source${card.sourceType ? ` · ${esc(card.sourceType)}` : ""}${card.confidence ? `<span class="conf conf-${esc(card.confidence.toLowerCase().replace(/[^a-z]/g,''))}">${esc(card.confidence)}</span>` : ""}</a>` : ""}
           </article>`).join("") : `<div class="empty">No concepts match “${esc(query)}”.</div>`}`;
       $$(".bookmark").forEach(btn => btn.onclick = () => {
         state.bookmark = { type: "lesson", id: currentLesson, card: btn.dataset.bookmark };

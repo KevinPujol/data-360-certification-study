@@ -45,10 +45,17 @@ function parseTraining(md) {
   const sections = [...md.matchAll(/^## S(\d) — ([^\n]+)\n([\s\S]*?)(?=^## S\d|^## Appendix|(?![\s\S]))/gm)];
   return sections.map((section) => {
     const cards = [...section[3].matchAll(/^### ([^\n]+)\n([\s\S]*?)(?=^### |(?![\s\S]))/gm)].map((card) => {
-      const factsBlock = card[2].match(/- \*\*Key facts:\*\*\n([\s\S]*?)(?=\n- \*\*Why it matters|\n- \*\*Related|(?![\s\S]))/)?.[1] || "";
+      const body = card[2];
+      const factsBlock = body.match(/- \*\*Key facts:\*\*\n([\s\S]*?)(?=\n- \*\*Why it matters|\n- \*\*Related|(?![\s\S]))/)?.[1] || "";
       const facts = [...factsBlock.matchAll(/^\s{2}-\s+(.+(?:\n\s{4}.+)*)/gm)].map((x) => clean(x[1]));
-      const why = clean(card[2].match(/- \*\*Why it matters for the exam:\*\*\s*([\s\S]*?)(?=\n- \*\*Related|(?![\s\S]))/)?.[1] || "");
-      return { title: clean(card[1]), facts, why };
+      const why = clean(body.match(/- \*\*Why it matters for the exam:\*\*\s*([\s\S]*?)(?=\n- \*\*Related|(?![\s\S]))/)?.[1] || "");
+      const explainer = clean(body.match(/- \*\*In depth:\*\*\s*([\s\S]*?)(?=\n- \*\*Key facts|(?![\s\S]))/)?.[1] || "");
+      const source = (body.match(/- \*\*Source:\*\*\s*(\S+)/)?.[1] || "").trim();
+      const sourceType = clean(body.match(/- \*\*Type:\*\*\s*([^·\n]+)/)?.[1] || "");
+      const confidenceRaw = clean(body.match(/\*\*Source confidence:\*\*\s*([^\n·]+)/)?.[1] || "");
+      const confidence = (confidenceRaw.match(/^(direct|triangulated|needs[- ]verification|inferred)/i)?.[1] || confidenceRaw)
+        .replace(/\s+/g, "-").toLowerCase();
+      return { title: clean(card[1]), explainer, facts, why, source, sourceType, confidence };
     }).filter((card) => card.facts.length);
     return {
       id: Number(section[1]),

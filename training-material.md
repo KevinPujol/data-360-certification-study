@@ -43,6 +43,18 @@ were only partially retrievable — skim that badge directly.
 - **Exam section:** S1-positioning (14%)
 - **Source:** https://trailhead.salesforce.com/content/learn/modules/data-cloud-explore-the-data-landscape/get-to-know-the-data-landscape-and-data-cloud
 - **Type:** Trailhead module · **Source confidence:** direct
+  - **In depth:** Data 360 is Salesforce's unified data platform, and the
+    single most important thing to internalize is that it is defined by an
+    action arc — connect, unify, analyze, activate — rather than by being a
+    place where data sits. That framing exists because Salesforce is
+    deliberately distinguishing it from a traditional Customer Data Platform
+    (CDP): a CDP mainly assembles marketing profiles, whereas Data 360 unifies
+    data across the entire Salesforce ecosystem and grounds AI agents, so the
+    exam wants you to call it "more than a CDP." The three business pains it
+    targets (data silos, unreliable insights, and the lag between insight and
+    action) map directly onto why each stage of the arc exists, and its
+    zero-copy design plus sub-second profile updates are what let it close
+    that insight-to-action gap without the duplication cost of legacy ETL.
 - **Key facts:**
   - Data 360 is a centralized platform that **connects → unifies → analyzes →
     activates** data — the exam framing is that arc, not just storage.
@@ -61,6 +73,18 @@ were only partially retrievable — skim that badge directly.
 - **Exam section:** S1-positioning (14%)
 - **Source:** https://trailhead.salesforce.com/content/learn/modules/data-cloud-explore-the-data-landscape/explore-the-stages-of-data-cloud
 - **Type:** Trailhead module · **Source confidence:** direct
+  - **In depth:** The three stages are the backbone taxonomy of the whole
+    product: Connect brings data in (or references it), Harmonize & Unify
+    cleans, governs, and resolves it into a single customer profile, and
+    Analyze & Act turns that profile into insights, segments, and activations.
+    Understanding where a given activity lives is the crux of many scenario
+    questions, because tasks that sound similar sit in different stages —
+    governance work like auto-tagging and identity resolution belong to
+    Harmonize/Unify, not Connect, even though they happen "early." This
+    matters beyond terminology because Salesforce reuses these exact stage
+    names as the categories of its credit-consumption billing model, so the
+    taxonomy is a genuine operational mental model rather than marketing
+    language.
 - **Key facts:**
   - Stage 1 **Connect**: structured + unstructured data, 275+ prebuilt
     connectors + Zero Copy Federation; unstructured follows connect → process →
@@ -81,6 +105,17 @@ were only partially retrievable — skim that badge directly.
 - **Exam section:** S1-positioning (14%)
 - **Source:** https://trailhead.salesforce.com/content/learn/modules/data-cloud-credit-consumption-quick-look/get-started-with-data-cloud-credit-consumption
 - **Type:** Trailhead module · **Source confidence:** direct
+  - **In depth:** Data 360 is metered on data processed rather than seats, and
+    credits are computed as data volume (in millions of rows) times a
+    per-activity multiplier, so the same row count costs different amounts
+    depending on what you do with it. The six billable categories deliberately
+    mirror the three stages, which is why learning the stage taxonomy pays off
+    twice. The highest-value exam trap here is knowing what is free: ingesting
+    from a Salesforce org through the CRM connector (and the Agentforce
+    Marketing, Commerce, and Personalization connectors) consumes no credits,
+    which is why practitioners lean on those sources and use levers like
+    batch-over-streaming, tighter scoping, and lower refresh frequency to
+    control spend — all of which is monitored through the Digital Wallet.
 - **Key facts:**
   - Formula: **Credits = (Data Processed ÷ 1,000,000) × Multiplier**. Unit is
     always 1M rows; multiplier varies per usage type. Ex: 2M rows × 15 = 30
@@ -102,6 +137,19 @@ were only partially retrievable — skim that badge directly.
 - **Exam section:** S1-positioning (14%)
 - **Source:** https://trailhead.salesforce.com/content/learn/modules/real-time-use-cases-in-data-cloud/explore-real-time-features-in-data-cloud
 - **Type:** Trailhead module · **Source confidence:** direct
+  - **In depth:** This card is about the real-time pipeline that sits
+    alongside Data 360's normal scheduled/batch processing, and the
+    discriminator that questions hinge on is continuous refresh versus
+    scheduled refresh. A Real-Time Data Graph reshapes DMO data into a
+    denormalized view that updates continuously with millisecond access,
+    whereas a standard data graph refreshes on a schedule — so if a scenario
+    demands live personalization, the real-time graph is the answer. It helps
+    to see the components as an end-to-end chain: real-time ingestion (via
+    Web/Mobile SDK or the Ingestion API) captures engagement events in
+    milliseconds, identity resolution rulesets produce unified DMOs that feed
+    the real-time graphs, and real-time calculated insights, segments, and
+    Flow-triggered data actions consume them — which is exactly why there is a
+    dedicated "End-to-End Real-Time Processing" credit category.
 - **Key facts:**
   - **Real-Time Data Graphs** transform DMO data into new views with
     millisecond access; unlike standard (scheduled-refresh) graphs, they refresh
@@ -120,6 +168,16 @@ were only partially retrievable — skim that badge directly.
 - **Exam section:** S1-positioning (14%)
 - **Source:** https://trailhead.salesforce.com/content/learn/modules/ai-data-crm-quick-look/learn-how-ai-data-crm-work-together
 - **Type:** Trailhead module · **Source confidence:** direct
+  - **In depth:** This is the conceptual glue explaining where Data 360 sits
+    in Salesforce's overall stack: CRM is the trusted source of customer
+    records, Data 360 unifies data across systems, and AI acts on top of that
+    unified data. The reason this matters is grounding — Agentforce agents
+    converse in natural language but are only reliable when connected to live
+    business data, and Data 360 is what supplies that grounding. Two
+    distinctions recur on the exam: predictive AI forecasts or scores outcomes
+    (demand, next-best-action) while generative AI creates new content, and
+    the Einstein/Agentforce Trust Layer is the governance boundary that keeps
+    AI's use of data safe.
 - **Key facts:**
   - CRM = the single source of truth for customer records; the foundational
     layer AI and data build on.
@@ -139,6 +197,20 @@ were only partially retrievable — skim that badge directly.
 - **Exam section:** S1-positioning (14%)
 - **Source:** https://trailhead.salesforce.com/content/learn/modules/data-cloud-governance-quick-look/get-to-know-data-cloud-governance
 - **Type:** Trailhead module · **Source confidence:** direct
+  - **In depth:** Governance in Data 360 is built on attribute-based access
+    control (ABAC), which grants access by combining who the user is (role,
+    department) with what the data is (its tags), rather than relying on
+    static role-based permissions alone — this is the answer whenever a
+    scenario needs flexible, context-driven access. The pieces fit together as
+    a system: AI tagging auto-classifies incoming records so ABAC policies
+    have attributes to evaluate, dynamic masking reveals or hides field values
+    based on the requesting user's access at query time (unlike static
+    field-level security), and purpose limitation constrains AI agents to a
+    data set's intended use, forcing escalation when a request falls outside
+    it. For the ethical-data-use questions on the blueprint, be ready to
+    distinguish these controls plus Platform Encryption (customer-controlled
+    keys) and Private Connect (private VPC connectivity) and pick the right
+    one for a stated requirement.
 - **Key facts:**
   - Policy-based governance uses **attribute-based access control (ABAC)** —
     access from user attributes (role/dept) + data attributes (tags), not RBAC
@@ -158,6 +230,17 @@ were only partially retrievable — skim that badge directly.
 - **Exam section:** S1-positioning (14%)
 - **Source:** https://trailhead.salesforce.com/content/learn/modules/data-cloud-discover-the-value
 - **Type:** Trailhead module · **Source confidence:** triangulated
+  - **In depth:** This card exists so you can map a business pain to the
+    specific Data 360 value lever and the named metric that solves it, which
+    is how the value-oriented questions are phrased. In marketing the lever is
+    finer segmentation and activation to advertising channels; in sales it is
+    surfacing scoring metrics — likelihood to convert, lifetime value, and
+    propensity to purchase, all delivered as calculated insights — directly to
+    reps; and in service it is giving agents a unified customer view inside
+    Agentforce Service so they stop hopping between systems. The underlying
+    pattern is that a unified profile plus calculated insights is the common
+    engine, and each department simply consumes it through a different surface
+    and metric.
 - **Key facts:**
   - Marketing: fine-tune segments, activate for advertising to high-value
     cohorts.
@@ -175,6 +258,18 @@ were only partially retrievable — skim that badge directly.
 - **Exam section:** S1-positioning (14%)
 - **Source:** https://trailhead.salesforce.com/content/learn/modules/data-cloud-explore-the-data-landscape/explore-the-stages-of-data-cloud
 - **Type:** Trailhead module · **Source confidence:** direct
+  - **In depth:** Zero-Copy Federation is the capability that lets Data 360
+    query data where it already lives in an external lake or warehouse through
+    a bidirectional connection, rather than physically copying it in — which
+    is precisely what makes it a differentiator against legacy ETL. The
+    decision every scenario tests is federation versus ingestion: choose
+    zero-copy when the data must remain in its system of record for
+    compliance, cost, or freshness reasons and only needs to be referenced at
+    query time, and choose one of the ingestion connectors when the data must
+    be persisted so it can be transformed, unified, and driven into downstream
+    activation. Keep the two mechanisms cleanly separated in your mind,
+    because the prebuilt connectors do land and copy data whereas federation
+    deliberately does not.
 - **Key facts:**
   - Zero Copy Federation queries data **in place** in external lakes/warehouses
     via bidirectional connection — distinct from the 275+ ingestion connectors,
@@ -190,6 +285,15 @@ were only partially retrievable — skim that badge directly.
 - **Exam section:** S1-positioning (14%)
 - **Source:** https://www.salesforce.com/data/guide/
 - **Type:** Third-party guide · **Source confidence:** triangulated
+  - **In depth:** For the exam you mainly need awareness that "Data Cloud" was
+    rebranded to "Data 360" at Dreamforce 2025, and — importantly — that the
+    underlying object and API names may still read "Data Cloud," so the two
+    terms refer to the same product. The rebrand carried a positioning shift:
+    from a marketing-oriented CDP to an enterprise-wide data foundation that
+    fuels AI, automation, and decisioning across the whole business. That
+    framing reinforces the zero-copy story, since connecting live to external
+    systems like Snowflake, Databricks, and Google Cloud without ETL is what
+    makes it credible as the data foundation for Agentforce.
 - **Key facts:**
   - Rebrand "Data Cloud" → "Data 360" at Dreamforce 2025 (Oct 14, 2025); object
     /API names may still say Data Cloud.
@@ -212,6 +316,18 @@ data-stream error codes need live-doc verification before exam day.
 - **Exam section:** S2-admin (13%)
 - **Source:** https://help.salesforce.com/s/articleView?id=000396444
 - **Type:** Salesforce Doc · **Source confidence:** triangulated
+  - **In depth:** Before any data can flow into Data 360, the platform has to
+    be both licensed and switched on, and these are two separate gates that
+    trip a lot of scenario questions. Buying or adding the license only makes
+    the product eligible on qualifying editions; an admin still has to walk
+    through a deliberate manual activation inside Setup, because Salesforce
+    treats Data 360 as a heavyweight capability rather than something silently
+    enabled. The key strategic fact is that the org where the license is
+    purchased permanently fixes the data residency region, which is why
+    residency questions push you toward org-level and Data Cloud One decisions
+    rather than in-app configuration. Consulting partners follow a distinct
+    path (learning, then a short-lived demo org) because they need sandboxes
+    to practice in rather than a production tenant.
 - **Key facts:**
   - Available on **Enterprise and Unlimited** editions (plus a free tier);
     Developer Edition is NOT auto-provisioned.
@@ -229,6 +345,19 @@ data-stream error codes need live-doc verification before exam day.
 - **Exam section:** S2-admin (13%)
 - **Source:** https://help.salesforce.com/s/articleView?id=005131350
 - **Type:** Salesforce Doc · **Source confidence:** triangulated
+  - **In depth:** Access in Data 360 is granted through a fixed set of
+    Salesforce-provided permission sets, each mapping to a persona along the
+    pipeline from full architecture control down to view-only. The September
+    2025 rename matters because the exam deliberately uses the old
+    marketing-flavored names as distractors, so you need to hold both
+    vocabularies and know that the new names describe what each role can
+    actually do: architect the platform, manage activation strategy, or just
+    build segments. The most tested boundary is the general Data Cloud User,
+    who can view data but is walled off from Setup, data-space management, and
+    segments/activations, illustrating that viewing data and administering the
+    platform are separate privileges. Layer on top of this that any set, even
+    the powerful Architect, can be scoped to specific data spaces, so a role
+    and the data it touches are two independent axes of control.
 - **Key facts:**
   - **Sept 4, 2025 renames:** Data Cloud Admin → **Data Cloud Architect**
     (full access); Marketing Manager → **Data Cloud Activation Manager**
@@ -248,6 +377,19 @@ data-stream error codes need live-doc verification before exam day.
 - **Exam section:** S2-admin (13%)
 - **Source:** https://help.salesforce.com/s/articleView?id=data.c360_a_crm_enable_object_and_field_permissions.htm
 - **Type:** Salesforce Doc · **Source confidence:** direct *(verified 2026-07-03)*
+  - **In depth:** When you connect a CRM org, Data 360 auto-creates a
+    dedicated connector permission set, and this set is what governs which
+    source objects and fields the platform is even allowed to see. The
+    mechanism trips people because ingestion runs as an integration identity,
+    not as your user, so read access alone is not enough: the platform needs
+    View All Records on the object to be confident it can pull every row, and
+    without it the object simply never appears in the New Data Stream picker.
+    This is why the classic troubleshooting question, a custom CRM object that
+    won't show up when building a stream, resolves to enabling View All
+    Records on the Data Cloud Salesforce Connector set rather than to any
+    stream setting. Editing these object settings and creating the stream both
+    require elevated privileges (System Admin or Data Cloud Architect),
+    reinforcing that source enablement is an administrative act.
 - **Key facts:**
   - To ingest a CRM object (esp. a **custom object**) into Data 360, you edit the
     **Data Cloud Salesforce Connector** permission set (auto-created when you
@@ -271,6 +413,19 @@ data-stream error codes need live-doc verification before exam day.
 - **Exam section:** S2-admin (13%)
 - **Source:** https://help.salesforce.com/s/articleView?id=data.c360_a_starter_data_bundles.htm
 - **Type:** Salesforce Doc · **Source confidence:** direct *(verified 2026-07-03)*
+  - **In depth:** A starter data bundle is Salesforce's shortcut for standing
+    up common sources: instead of hand-building data streams, DLOs, schema,
+    and DMO mappings one at a time, you pick a prebuilt definition that wires
+    all of that to the Customer 360 Data Model for you. This is the answer
+    whenever a scenario asks for the fastest way to ingest CRM or Marketing
+    Cloud Engagement data with mapping already done, because the bundle
+    collapses the ingestion-plus-harmonization work that would otherwise span
+    S3 and S4. The tradeoff is rigidity, which is where the testable gotchas
+    live: bundles are configured one at a time and don't support certain field
+    types (Phone/URL/Email/Percent for CRM, formula fields for MCE), so if the
+    source relies on those you fall back to manual setup. MCE bundles further
+    split by engagement channel and generate at the business-unit level,
+    reflecting how Marketing Cloud itself is organized.
 - **Key facts:**
   - A **starter data bundle** is a **Salesforce-defined data stream definition
     with mapping already done to the Customer 360 Data Model** — it creates the
@@ -294,6 +449,17 @@ data-stream error codes need live-doc verification before exam day.
 - **Exam section:** S2-admin (13%)
 - **Source:** https://help.salesforce.com/s/articleView?id=data.c360_a_data_explorer.htm
 - **Type:** Salesforce Doc · **Source confidence:** direct *(verified 2026-07-03)*
+  - **In depth:** Data Explorer is the platform's built-in inspection surface,
+    letting you open DLOs, DMOs, calculated insight objects, and data graphs
+    to confirm that ingestion landed correctly and that your formulas produce
+    the right values. It exists because Data 360 is largely a pipeline you
+    can't otherwise see into, so the exam's diagnose-and-explore objective
+    names it as the go-to validation tool. The distinction that scenario
+    questions hinge on is which viewer to reach for: Data Explorer for
+    inspecting the underlying objects, Profile Explorer for a single unified
+    individual's full profile, and the Query Editor or Query API for ad-hoc
+    SQL. If a user can't find it, that's a permissions gap an admin must open
+    rather than a licensing problem.
 - **Key facts:**
   - **Data Explorer** lets you **view and validate** DLOs, DMOs, calculated
     insight objects (CIOs), and data graphs — the go-to tool to confirm data and
@@ -312,6 +478,20 @@ data-stream error codes need live-doc verification before exam day.
 - **Exam section:** S2-admin (13%)
 - **Source:** https://trailhead.salesforce.com/content/learn/modules/data-spaces-in-data-cloud
 - **Type:** Trailhead module · **Source confidence:** triangulated
+  - **In depth:** A data space is a logical partition inside a single Data 360
+    org, letting one tenant serve multiple brands, regions, or business units
+    while keeping their downstream work separate. The mental model that
+    answers most questions is knowing exactly what is isolated versus shared:
+    the raw plumbing (data sources, streams, and DLOs) can surface into many
+    spaces, but everything built on top (mappings, identity resolution,
+    calculated insights, segments, activations, and data actions) is rebuilt
+    per space and never crosses. Crucially, a data space partitions data
+    within one region and does not create true residency separation and does
+    not unify or merge records, which is why the recurring trap distinguishes
+    a data space (brand segregation), a separate org (residency), and Data
+    Cloud One (cross-org sharing). Data shares are a distinct mechanism for
+    externally sharing objects and underpin Data Cloud One rather than in-org
+    isolation.
 - **Key facts:**
   - Every org gets **one default data space** (cannot delete; can rename).
   - Only **Data Cloud Architects & System Admins** create/edit/delete spaces.
@@ -331,6 +511,18 @@ data-stream error codes need live-doc verification before exam day.
 - **Exam section:** S2-admin (13%)
 - **Source:** https://trailhead.salesforce.com/content/learn/modules/data-cloud-one
 - **Type:** Trailhead module · **Source confidence:** triangulated
+  - **In depth:** Data Cloud One solves the problem of multiple Salesforce
+    orgs needing to work off one shared Data 360 without physically moving or
+    duplicating the platform. It designates a single home org that actually
+    holds the data and shares it out to companion orgs through no-code setup,
+    so all companion data lives in the home org's region, which is why it is
+    the answer to cross-org sharing scenarios. The sharing unit is the data
+    space, tying this concept directly back to isolation rules: you expose
+    specific spaces to specific companions rather than sharing everything. The
+    consolidation trap the exam loves is the multi-org scenario where several
+    orgs already have Data 360; the correct move is to pick one home and
+    deprovision the rest, a slow and risky process that candidates must
+    recognize as a real cost rather than a quick toggle.
 - **Key facts:**
   - One central **home org** shares data/metadata to multiple **companion
     orgs** via no-code setup; companion data resides in the home org's region.
@@ -349,6 +541,18 @@ data-stream error codes need live-doc verification before exam day.
 - **Exam section:** S2-admin (13%)
 - **Source:** https://trailhead.salesforce.com/content/learn/modules/data-cloud-data-governance-strategies/manage-the-day-zero-policy
 - **Type:** Trailhead module · **Source confidence:** direct
+  - **In depth:** Every Data 360 org ships with a preactivated Allow All
+    policy so that data is usable from the moment it lands, prioritizing
+    business continuity over least privilege. The counterintuitive mechanic,
+    and the whole point of this card, is that Allow All is a blanket override:
+    while it is active, any granular Allow policies you author have no effect
+    at all, because universal access already trumps them. This is why the
+    signature exam scenario, an admin who built careful policies yet saw
+    nothing change, resolves to deleting Allow All rather than rebuilding
+    policies. The catch is that the model is ABAC enforced through object-,
+    field-, and row-level security, so deleting Allow All with no replacement
+    policies revokes access instantly, making the disciplined migration
+    sequence (build and test granular first, then cut over) the safe path.
 - **Key facts:**
   - All orgs start with a preactivated **"Allow All"** policy (universal access)
     for business continuity.
@@ -369,6 +573,19 @@ data-stream error codes need live-doc verification before exam day.
 - **Exam section:** S2-admin (13%)
 - **Source:** https://www.salesforce.com/data/governance/
 - **Type:** Salesforce Doc · **Source confidence:** triangulated
+  - **In depth:** This card covers how Data 360 knows what its data means and
+    how sensitive it is, using preconfigured taxonomies for regimes like
+    HIPAA, GDPR, and PII plus custom tags that propagate downstream so
+    classifications follow the data. Because these policies are enforced
+    platform-wide, the same governance applies whether the data surfaces in
+    Agentforce, analytics, or segmentation, rather than being re-implemented
+    per feature, which is the systemic design the exam wants you to
+    internalize. The distinction scenario questions probe is masking versus
+    deletion: dynamic masking happens at query time, is reversible, and never
+    alters the stored value, whereas consent-driven actions like honoring
+    Do-Not-Share/Sell and data-subject deletion are permanent, rights-based
+    changes. The Consent API is the programmatic hook that reads and writes
+    consent on the profile object.
 - **Key facts:**
   - Preconfigured classification taxonomies (HIPAA, GDPR, PII) + custom
     taxonomy; tags propagate downstream.
@@ -386,6 +603,18 @@ data-stream error codes need live-doc verification before exam day.
 - **Exam section:** S2-admin (13%)
 - **Source:** https://trailhead.salesforce.com/content/learn/modules/communication-capping-in-data-cloud-quick-look/get-to-know-communication-capping
 - **Type:** Trailhead module · **Source confidence:** direct
+  - **In depth:** Communication capping limits how many messages an individual
+    or a segment receives, serving compliance, fatigue avoidance, and budget
+    control at once. Its configuration splits into parameters you define (a
+    required channel plus up to two custom dimensions) and fixed functional
+    settings (frequency and limit type), a structure that lets you express
+    rules like a maximum number of emails per customer per month. The single
+    most testable point is the limit type: a Profile limit caps per individual
+    record and is the tool for compliance and fatigue, while a Dimension limit
+    caps across everyone matching a parameter-value combination and is the
+    tool for segment-wide budget. Outcomes land in the CG_Audience_Dropped and
+    CG_Audience_Qualified DMOs, and because capping consumes credits it is a
+    deliberate, metered feature.
 - **Key facts:**
   - Caps communications for compliance, fatigue avoidance, budget optimization.
   - **Enterprise Parameters:** Channel required (SMS/Email/WhatsApp/Push) + up
@@ -405,6 +634,19 @@ data-stream error codes need live-doc verification before exam day.
 - **Exam section:** S2-admin (13%)
 - **Source:** https://developer.salesforce.com/docs/data/data-cloud-dev/guide/packages-data-kits.html
 - **Type:** Salesforce Doc · **Source confidence:** direct
+  - **In depth:** A Data Kit is the container that makes Data 360 metadata
+    deployable, holding definitions like calculated insights, profiles, and
+    data streams (never row-level data) and managing the dependency order
+    among them. The core rule that answers deployment-failure questions is
+    that Data 360 components (streams, DMOs, DLOs, CIs) cannot deploy
+    standalone; they must ride inside a Data Kit, which is why a naked
+    component deployment fails. A second Winter '25+ rule forbids mixing Data
+    360 and non-Data 360 metadata in the same package, so the two must be
+    split, another common cause of failed deployments. Standard kits handle
+    reusable metadata distribution while DevOps kits target CI/CD pipelines,
+    and because managed-package metadata is locked for subscribers and Data
+    360 sandboxes are metadata-only, testing relies on synthetic data rather
+    than real records.
 - **Key facts:**
   - A **Data Kit** is nested inside a standard package; holds Data 360 metadata
     definitions (CIs, profiles, data streams), **not row-level data**.
@@ -426,6 +668,17 @@ data-stream error codes need live-doc verification before exam day.
 - **Exam section:** S2-admin (13%)
 - **Source:** https://developer.salesforce.com/docs/data/data-cloud-dev/guide/data-cloud-cli-deploy.html
 - **Type:** Salesforce Doc · **Source confidence:** direct
+  - **In depth:** This card is the operational counterpart to packaging: it
+    covers pushing a Data Kit through the command line for repeatable,
+    pipeline-driven deployment, which requires the DevOps kit type plus the
+    full developer toolchain. The prerequisites that trip real deployments are
+    structural rather than permission-based: data spaces must already exist
+    with matching prefix names in both source and target, and key qualifier
+    files must be deleted before you deploy. Recognizing the named failure
+    modes is what the exam rewards, so learn the specific signatures
+    (FieldSrcTrgtRelationship missing-reference errors, DLO schema desync, and
+    connectors dropping to inactive and needing manual re-authentication after
+    deploy) rather than defaulting to a generic check-your-permissions answer.
 - **Key facts:**
   - CLI deploy requires the **DevOps** kit type, a deployment connection, VS
     Code + Salesforce CLI + Salesforce Extension Pack (Expanded).
@@ -442,6 +695,17 @@ data-stream error codes need live-doc verification before exam day.
 - **Exam section:** S2-admin (13%)
 - **Source:** https://help.salesforce.com/s/articleView?id=data.c360_a_data_ingestion.htm
 - **Type:** Salesforce Doc · **Source confidence:** triangulated
+  - **In depth:** When ingestion misbehaves, Data 360 rarely throws a hard
+    error — it quarantines the offending rows as "problem records" in a
+    dedicated DLO and keeps processing the rest, so the exam expects you to
+    know where to look rather than assume a stream simply failed. The two
+    surfaces that matter are the problem-record DLO (for row-level data issues
+    across structured, SDK, and Ingestion API connectors) and the data stream
+    history panel (your primary diagnosis view for run status). For CRM
+    connections specifically, failures almost always trace back to a missing
+    field on the source object or an integration user without read access, and
+    the sequencing rule that trips people up is that you must disable a field
+    in Data 360 before deleting it in the CRM, or dependent streams break.
 - **Key facts:**
   - Failed records → logged as **"problem records"** in a dedicated problem
     record DLO (all structured/SDK/Ingestion API connectors).
@@ -458,6 +722,21 @@ data-stream error codes need live-doc verification before exam day.
 - **Exam section:** S2-admin (13%)
 - **Source:** https://help.salesforce.com/s/articleView?id=data.c360_a_data_cloud_sandbox_consideration.htm
 - **Type:** Salesforce Doc · **Source confidence:** direct *(verified 2026-07-03)*
+  - **In depth:** A Data 360 sandbox exists to test metadata and deployments,
+    not to mirror live data, and the exam centers on precisely what carries
+    over versus what you must rebuild. License match inherits the Data Cloud
+    licenses without a refresh but copies only the licenses, so org
+    preferences, metadata, and permissions have to be reconstructed. The most
+    consequential behavior is that connections replicate without their
+    authorization data, arriving inactive, so nothing ingests until you
+    re-authenticate, and until that ingest runs the copied components display
+    stale production record counts and dates. Other defaults follow the same
+    safety-first logic: newly deployed segments default to Don't Publish, data
+    graphs and data-action targets need manual activation, a replicated DLO
+    can only be deleted back in production, and because these sandboxes follow
+    production limits and can't be templated, the practical answer to what
+    persists is metadata copies but everything data- and connection-dependent
+    must be redone.
 - **Key facts:**
   - Production must have Data 360 provisioned first; **license match** inherits
     Data Cloud licenses **without refreshing** the sandbox but copies **only
@@ -495,6 +774,18 @@ confirm exact cadences in-org.
 - **Exam section:** S3-ingestion (18%)
 - **Source:** https://www.salesforce.com/data/connectivity/data-cloud-connectors/
 - **Type:** Salesforce Doc · **Source confidence:** triangulated
+  - **In depth:** A connector is the pluggable adapter that tells Data 360 how
+    to reach a given system, and Salesforce ships 270+ of them so that almost
+    any source can feed the platform without custom code. What matters
+    conceptually is that connectors fall into four families
+    (Salesforce-native, Connector Service like MuleSoft and the Ingestion API,
+    third-party cloud storage and warehouses, and Zero Copy/BYOL) and that
+    each family implies a different ingestion mechanism and directionality
+    (in-only, out-only, or bidirectional). The mental model to carry into the
+    exam is the chain: every connector defines a Data Source, and under it you
+    configure one or more Data Streams that actually pull specific objects, so
+    scenario questions are really asking you to name the right family plus
+    whether the data is copied in or federated in place.
 - **Key facts:**
   - 270+ connectors: native, via MuleSoft, via APIs, via SDKs; support batch,
     streaming, or real-time.
@@ -515,6 +806,18 @@ confirm exact cadences in-org.
 - **Exam section:** S3-ingestion (18%)
 - **Source:** https://help.salesforce.com/s/articleView?id=sf.c360_a_data_lake_objects.htm
 - **Type:** Salesforce Doc · **Source confidence:** triangulated
+  - **In depth:** This card describes the backbone of how raw source data
+    becomes usable, harmonized data in Data 360, and it is the single most
+    important vocabulary in the ingestion domain. Data flows through a fixed
+    hierarchy: the Data Stream is the config, the DSO holds the raw staging
+    copy, the DLO materializes it into typed columnar Parquet storage, and the
+    DMO is the harmonized view mapped to the canonical Customer 360 model. The
+    other half is the three stream categories (Profile, Engagement, Other),
+    which are chosen at creation and are immutable because they drive
+    downstream behavior like identity resolution and time-series handling;
+    Engagement in particular demands an immutable Event Date timestamp, which
+    is why picking the wrong category forces a delete-and-recreate rather than
+    a simple edit.
 - **Key facts:**
   - Hierarchy: **Data Stream** (raw config) → **DSO** (Data Source Object, raw/
     staging) → **DLO** (Data Lake Object, materialized, typed, columnar Parquet)
@@ -533,6 +836,16 @@ confirm exact cadences in-org.
 - **Exam section:** S3-ingestion (18%)
 - **Source:** https://developer.salesforce.com/docs/data/data-cloud-int/guide/c360-a-ingestion-api.html
 - **Type:** Salesforce Doc · **Source confidence:** direct
+  - **In depth:** The Ingestion API is the escape hatch for any custom or
+    proprietary source that has no prebuilt connector, so it is the answer
+    whenever a scenario describes homegrown or non-standard systems pushing
+    data in. Its defining trait is flexibility: one connector handles both
+    bulk CSV loads and incremental streaming against the same data stream,
+    which is unusual among connectors. The setup order is what the exam tests,
+    so anchor on the three steps in sequence (a Connected App with OAuth
+    first, then the connector created by uploading an OpenAPI Spec YAML that
+    declares the schema, then the data stream that exposes the endpoints),
+    along with the OAuth scopes that make the ingest calls authorized.
 - **Key facts:**
   - One Ingestion API connector supports **both bulk (CSV) and streaming**
     (incremental) against the same data stream.
@@ -549,6 +862,17 @@ confirm exact cadences in-org.
 - **Exam section:** S3-ingestion (18%)
 - **Source:** https://developer.salesforce.com/docs/data/data-cloud-int/references/data-cloud-ingestionapi-ref/c360-a-api-streaming-ingestion.html
 - **Type:** Salesforce Doc · **Source confidence:** direct
+  - **In depth:** Once you know the Ingestion API supports both modes, the
+    exam pivots to the concrete limits that distinguish them, and these
+    numeric ceilings are classic multiple-choice bait. Streaming is the
+    fire-and-forget path for small incremental payloads processed in roughly
+    three-minute micro-batches with tight per-request size and per-delete
+    record caps, while bulk is the high-volume CSV path with large per-file
+    and per-job limits and a cleanup window for stale jobs. The practical
+    mental model is that streaming trades throughput for freshness and bulk
+    does the reverse, and both are governed by rate limits (concurrent
+    requests and requests per second) that return HTTP 429 when exceeded, plus
+    a short delay after ingestion before data becomes queryable.
 - **Key facts:**
   - **Streaming:** fire-and-forget micro-batches, processed ~**every 3 min**;
     Insert/Delete/validation ops; **200 KB JSON/request**; **200 records max**
@@ -566,6 +890,17 @@ confirm exact cadences in-org.
 - **Exam section:** S3-ingestion (18%)
 - **Source:** https://admin.salesforce.com/blog/2024/data-cloud-full-stream-ahead
 - **Type:** Salesforce Doc/blog · **Source confidence:** triangulated
+  - **In depth:** This card generalizes the streaming-vs-bulk tradeoff beyond
+    the Ingestion API into a decision framework about data freshness versus
+    load size across all connectors. Batch ingestion favors high-throughput
+    periodic loads like nightly or weekly backfills, while streaming delivers
+    near-real-time micro-batches suited to CDC, webhooks, and event streams,
+    and the common hybrid pattern is to bulk-load history once and then stream
+    ongoing changes. The exam-critical detail is the Salesforce CRM
+    connector's baseline behavior: incremental delta refreshes roughly every
+    ten minutes with an automatic bi-weekly full refresh, plus an optional
+    streaming mode; when a question says sub-minute event freshness choose
+    streaming, and when it says one-time historical load choose batch.
 - **Key facts:**
   - **Batch**: lower cadence, higher throughput; historical backfills + periodic
     large loads (nightly/weekly/monthly).
@@ -586,6 +921,19 @@ confirm exact cadences in-org.
 - **Exam section:** S3-ingestion (18%)
 - **Source:** https://trailhead.salesforce.com/content/learn/modules/data-cloud-with-zero-copy/get-started-with-zero-copy-data-federation
 - **Type:** Trailhead module · **Source confidence:** direct
+  - **In depth:** Zero Copy is Data 360's alternative to ingestion: instead of
+    copying data in, it reads external data in place using the Apache Iceberg
+    open table format, and it works in both directions (federation lets Data
+    360 read external data, sharing lets external systems read Data 360 data).
+    The high-yield distinction is the two federation styles and where the
+    compute runs. Query Federation pushes the work onto the external system's
+    engine over JDBC, holds results only in memory, costs more, and supports
+    optional caching that trades cost for speed and unlocks trigger-based
+    features; File Federation instead uses Data 360's own compute to read
+    external storage directly, costs less, is always live with no caching,
+    natively supports triggers, and is recommended when the source supports
+    it. Reasoning about compute location, cost, caching, and trigger support
+    is exactly how the exam frames these comparison questions.
 - **Key facts:**
   - Two capabilities: **data federation** (Data 360 reads external data w/o
     copying) + **data sharing** (external system reads Data 360 data) =
@@ -608,6 +956,19 @@ confirm exact cadences in-org.
 - **Exam section:** S3-ingestion (18%)
 - **Source:** https://trailhead.salesforce.com/content/learn/modules/data-cloud-with-zero-copy/explore-use-cases-for-zero-copy-data-federation
 - **Type:** Trailhead module · **Source confidence:** direct
+  - **In depth:** This card turns Zero Copy from a mechanism into a design
+    choice, which is how the certification frames it in scenarios. The setup
+    follows a plan-connect-stream arc (identify use cases, gather connection
+    details, create the federation connection as query or file, then create
+    the data stream as live query or caching), and it is supported by the
+    major Zero Copy Partner Network warehouses like Snowflake, BigQuery,
+    Redshift, and Databricks. The decision boundary is what to memorize:
+    choose Zero Copy when data must stay in place for governance, cost, or
+    freshness reasons and the source is a warehouse or Iceberg store, but
+    choose ingestion when the data must be materialized inside Data 360 to get
+    the full DLO/DMO transform and activation pipeline. Note that Zero Copy
+    still consumes credits, so it is not free simply because nothing is
+    copied.
 - **Key facts:**
   - Setup: plan use cases → collect connection info → create federation
     connection (query or file) → create data stream (live query or caching).
@@ -625,6 +986,17 @@ confirm exact cadences in-org.
 - **Exam section:** S3-ingestion (18%)
 - **Source:** https://trailhead.salesforce.com/content/learn/modules/fully-qualified-keys-in-data-cloud-quick-look/learn-about-fully-qualified-keys
 - **Type:** Trailhead module · **Source confidence:** direct
+  - **In depth:** A Fully Qualified Key solves a specific collision problem
+    that arises the moment you harmonize multiple sources into one DMO: two
+    different systems can legitimately reuse the same literal record ID, and
+    without disambiguation their records would incorrectly merge. The FQK
+    fixes this by pairing the source key with a key qualifier (for example a
+    Contact ID tagged with a CRM qualifier), so joins must match on both the
+    value and the qualifier. The best-practice mental model is to add a
+    qualifier on every DLO primary and foreign key whenever you merge sources,
+    configured on the Data Lake Objects tab after the stream exists; this is
+    why the exam's classic scenario, records mismatching after merging two
+    sources, resolves to a missing FQK.
 - **Key facts:**
   - FQK = **source key** (e.g. Contact ID) + **key qualifier** (e.g. "CRM").
   - Prevents **key collisions** when multiple streams from different sources
@@ -641,6 +1013,16 @@ confirm exact cadences in-org.
 - **Exam section:** S3-ingestion (18%)
 - **Source:** https://trailhead.salesforce.com/content/learn/modules/batch-data-transforms-in-data-cloud-quick-look
 - **Type:** Trailhead module · **Source confidence:** triangulated
+  - **In depth:** Batch Data Transforms are Data 360's scheduled, visual way
+    to reshape and combine data at the DLO layer before harmonization, using a
+    drag-and-drop node editor for filtering, joining, aggregating, and
+    formulas that reads one or more DLOs and writes a target DLO. They are the
+    right tool for large-volume, complex, multi-source work where sub-minute
+    freshness is not required, which is precisely what contrasts them with
+    streaming transforms. The gotchas the exam probes are the constraints: the
+    same object cannot be both an input and an output, multiple output nodes
+    must share one write mode, and a newly created transform may take up to
+    thirty minutes before it first writes.
 - **Key facts:**
   - Visual drag-and-drop node editor (filter/join/aggregate/formula) combining
     one+ DLOs into a target DLO, run on a **schedule** (or manually).
@@ -657,6 +1039,21 @@ confirm exact cadences in-org.
 - **Exam section:** S3-ingestion (18%)
 - **Source:** https://help.salesforce.com/s/articleView?id=data.c360_a_streaming_transform_considerations.htm
 - **Type:** Salesforce Doc · **Source confidence:** direct *(verified 2026-07-03)*
+  - **In depth:** Streaming Data Transforms apply SQL to records as they
+    arrive rather than on a schedule, reading a source DLO and writing a
+    target DLO in near-real time, which makes them the low-latency counterpart
+    to batch transforms. The reason this card is so rule-heavy is that
+    near-real-time processing imposes strict constraints that generate a wave
+    of why-did-this-fail-validation exam questions: the target must be a DLO
+    created manually in the UI (not a stream-auto-created one) and must be
+    Active with no data stream still attached, every SQL statement needs a
+    primary key mapping (plus the Event DateTime for Engagement targets),
+    subqueries are unsupported, and key-qualifier fields from an FQK cannot be
+    used as source or destination. Round this out with the operational facts
+    that the logic is immutable after saving (delete and recreate to change
+    it), the initial sync can take up to thirty minutes, and when overlapping
+    transforms write the same field the last one to run wins in indeterminate
+    order.
 - **Key facts:**
   - Reads a **source DLO**, applies SQL (calc values, string/date ops, drop
     cols, optional WHERE) to records **as they arrive**, writes to a target DLO
@@ -682,6 +1079,17 @@ confirm exact cadences in-org.
 - **Exam section:** S3-ingestion (18%)
 - **Source:** https://developer.salesforce.com/docs/data/data-cloud-int/guide/c360-a-awss3-connector.html
 - **Type:** Salesforce Doc · **Source confidence:** triangulated
+  - **In depth:** The Amazon S3 connector is a batch-oriented file ingestion
+    path that polls a bucket on a schedule and pulls newly arrived files,
+    auto-detecting data types, delimiters, and datetime formats while
+    supporting wildcards and compressed archives. Because it operates on files
+    at scale, the two considerations the exam fixates on are operational
+    limits rather than concepts: a per-object ceiling of 100 million rows or
+    50 GB (whichever comes first), which means very large datasets must be
+    partitioned across multiple objects, and the requirement to allowlist Data
+    360's IP addresses on the source bucket so the platform can actually reach
+    it. Also remember that CSV files need headers plus at least one data row
+    to be ingested.
 - **Key facts:**
   - **Batch** connection; auto-retrieves new files on schedule (file
     notifications for unstructured).
@@ -698,6 +1106,18 @@ confirm exact cadences in-org.
 - **Exam section:** S3-ingestion (18%)
 - **Source:** https://help.salesforce.com/s/articleView?id=data.c360_a_data_types.htm
 - **Type:** Salesforce Doc · **Source confidence:** direct *(verified 2026-07-03)*
+  - **In depth:** Data types govern how each ingested field is stored and
+    later mapped, and this card is dense with exam traps precisely because a
+    wrong type silently corrupts data instead of erroring out. The signature
+    trap is leading zeros: an identifier like 00123 must be typed as Text,
+    because Number applies numeric scale and precision that strips the zeros
+    and turns out-of-range or non-numeric values into null. Two structural
+    rules reinforce this, that field data types are immutable once a DLO is
+    created and that a DLO field's type must match its DMO field's type with
+    the sole exception of Number-to-Text, so choosing the type correctly up
+    front is permanent. It also helps to know that Email, Phone, URL, and
+    Percent are just Text or Number underneath and are not format-validated,
+    and that Boolean cannot serve as a primary key.
 - **Key facts:**
   - Data 360 data types: **Boolean, Currency, Date_Only, Date (Datetime/
     Timestamp), Email, Number, Percent, Phone, Text, URL.**
@@ -721,6 +1141,17 @@ confirm exact cadences in-org.
 - **Exam section:** S3-ingestion (18%)
 - **Source:** https://help.salesforce.com/s/articleView?id=sf.c360_a_considerations_formula_fields.htm
 - **Type:** Salesforce Doc · **Source confidence:** direct *(verified 2026-07-03)*
+  - **In depth:** Formula fields let you compute derived or hard-coded values
+    as records flow into a data stream, so the calculation happens during
+    ingestion rather than as a separate downstream job. The exam trap that
+    defines this card is temporal: adding or changing a formula only affects
+    data going forward and is never retroactively applied to records already
+    ingested, though formulas do recompute on an incremental or full refresh
+    if the underlying record actually changed since the last refresh. Beyond
+    that timing behavior, the syntax is deliberately unforgiving in ways
+    questions exploit, since raw fields are referenced with the case-sensitive
+    sourceField prefix and a single-quoted header label, and mismatched
+    quoting or casing breaks the formula.
 - **Key facts:**
   - Formula fields are added to a data stream (hard-coded or derived from other
     fields) and computed **during ingestion**.
@@ -747,6 +1178,19 @@ DMO; Unified Individual vs Unified Link; deterministic vs "probabilistic."
 - **Exam section:** S4-harmonization (17%)
 - **Source:** https://developer.salesforce.com/docs/data/data-cloud-dmo-mapping/guide/c360dm-model-data.html
 - **Type:** Salesforce Doc · **Source confidence:** direct
+  - **In depth:** The Customer 360 Data Model is the standardized schema that
+    everything downstream in Data 360 depends on: raw ingested data lands in
+    Data Lake Objects (DLOs), but segmentation, identity resolution, and
+    activation all operate on the conformed Data Model Objects (DMOs) that
+    this model defines. Think of it as a shared vocabulary that lets data from
+    wildly different sources — CRM, marketing, commerce — describe the same
+    real-world concepts the same way. Subject areas (Party, Engagement,
+    Loyalty, Privacy, Product, Sales Order, Case) are just logical groupings
+    that bundle related DMOs so the model stays navigable, while Data Bundles
+    are Salesforce-provided shortcuts that pre-wire common source objects to
+    the right standard DMOs. The distinction scenario questions hinge on is
+    the layering: subject area is a category, a DMO is a mapped standardized
+    object, and a DLO is the raw table it draws from.
 - **Key facts:**
   - The **Customer 360 Data Model** is the standard framework unifying raw DLO
     data into a single actionable view.
@@ -762,6 +1206,19 @@ DMO; Unified Individual vs Unified Link; deterministic vs "probabilistic."
 - **Exam section:** S4-harmonization (17%)
 - **Source:** https://trailhead.salesforce.com/content/learn/modules/customer-360-data-model-for-customer-data-platform/get-to-know-data-model-objects
 - **Type:** Trailhead module · **Source confidence:** direct
+  - **In depth:** A DMO is a standardized template describing an instance of a
+    thing or an action — the conformed "target" shape that raw DLO data gets
+    mapped into so it becomes usable across the platform. DMOs relate to each
+    other through keys: a Primary Key uniquely identifies each record, while a
+    Foreign Key (typically a customer ID) is the shared link that stitches
+    records together across sources and objects. The single most exam-critical
+    fact here is the set of five DMOs that identity resolution cannot run
+    without — Individual, Party Identification, Contact Point Email, Contact
+    Point Phone, and Contact Point Address — because match rules operate on
+    exactly these objects. Keep the DMO-versus-DLO framing sharp: the DLO is
+    raw ingested data, the DMO is the mapped, harmonized version, and prefixes
+    (ssot__ for legacy standard, std__ for newer) simply signal a
+    Salesforce-provided object.
 - **Key facts:**
   - A DMO describes an instance of a thing/action — a standardized template.
   - The **5 DMOs required for identity resolution: Individual, Party
@@ -778,6 +1235,20 @@ DMO; Unified Individual vs Unified Link; deterministic vs "probabilistic."
 - **Exam section:** S4-harmonization (17%)
 - **Source:** https://trailhead.salesforce.com/content/learn/modules/data-and-identity-in-salesforce-cdp/map-required-objects
 - **Type:** Trailhead module · **Source confidence:** direct
+  - **In depth:** Harmonization is the concrete act of mapping raw DLO fields
+    onto DMO fields, and it is the step that turns siloed source data into the
+    unified model everything else relies on. The mechanics are directional and
+    disciplined: each DMO field draws from exactly one DLO source field, and
+    any stream carrying customer information must map something to the
+    Individual DMO's Individual ID — otherwise identity resolution has no
+    anchor to match on. Contact Point objects each carry their own primary key
+    plus a Party foreign key pointing back to Individual.ID, and the Party
+    Identification DMO holds alternative identifiers (loyalty numbers,
+    licenses, LinkedIn IDs) in a many-to-one relationship to that same
+    Individual. Because a wrong DLO-to-DMO mapping is the most common
+    real-world failure, scenario questions love to test whether you know that
+    the fix for "identity resolution isn't matching" often lives here in the
+    mapping, not in the match rules.
 - **Key facts:**
   - **Harmonization = mapping DLO fields into DMOs.** A DMO field maps to only
     one DLO source field.
@@ -796,6 +1267,17 @@ DMO; Unified Individual vs Unified Link; deterministic vs "probabilistic."
 - **Exam section:** S4-harmonization (17%)
 - **Source:** https://trailhead.salesforce.com/content/learn/modules/fully-qualified-keys-in-data-cloud-quick-look/learn-about-fully-qualified-keys
 - **Type:** Trailhead module · **Source confidence:** direct
+  - **In depth:** A Fully Qualified Key pairs a record's key with a
+    source-identifying qualifier so that when multiple streams feed the same
+    DMO, identical-looking key values from different systems don't
+    accidentally collide or fail to join. It is the same mechanic introduced
+    under ingestion (S3), but here it matters because harmonization funnels
+    many sources into one target object, and joins must use both the key and
+    its qualifier to stay correct. The exam angle is diagnostic: when a
+    question describes records that over-joined (unrelated records merged) or
+    under-joined (records that should have linked didn't), the FQK is
+    frequently the lever, because it controls whether cross-source keys are
+    treated as the same entity or kept distinct.
 - **Key facts:** *(see S3 FQK note — same mechanic, applied at harmonization:
   key + qualifier prevents cross-source collisions when multiple streams feed
   one DMO; joins use both.)*
@@ -806,6 +1288,20 @@ DMO; Unified Individual vs Unified Link; deterministic vs "probabilistic."
 - **Exam section:** S4-harmonization (17%)
 - **Source:** https://help.salesforce.com/s/articleView?id=sf.c360_a_identity_resolution_ruleset.htm
 - **Type:** Salesforce Doc · **Source confidence:** direct *(verified 2026-07-03)*
+  - **In depth:** An Identity Resolution Ruleset is the container that
+    orchestrates unification: it bundles the match rules that decide which
+    records represent the same entity with the reconciliation rules that
+    decide which conflicting value wins, and its designated primary DMO
+    determines what actually gets unified — individuals, accounts, leads, or
+    households. This container-versus-components framing is the heart of the
+    section's most confusable trio, so keep it straight: the ruleset holds
+    both, match rules answer "same person?", reconciliation rules answer
+    "whose value?". Rulesets are capped at two per data model per data space
+    (typically one for Individual, one for Account) and can run on a schedule
+    or in real time, with the two modes differing in timing and how they
+    interact with other features. Each run produces or refreshes Unified
+    Individual and Unified Link records and emits a Resolution Summary with
+    match statistics you use to evaluate whether the rules are behaving.
 - **Key facts:**
   - An **Identity Resolution Ruleset** bundles **match rules** (how to match) +
     **reconciliation rules** (which value wins). The ruleset's **primary DMO**
@@ -826,6 +1322,20 @@ DMO; Unified Individual vs Unified Link; deterministic vs "probabilistic."
 - **Exam section:** S4-harmonization (17%)
 - **Source:** https://trailhead.salesforce.com/content/learn/modules/data-and-identity-in-salesforce-cdp/select-identity-resolution-match-rules
 - **Type:** Trailhead module · **Source confidence:** direct
+  - **In depth:** Match rules are the logic that decides whether two records
+    point to the same real person, and each rule is built from an Object plus
+    a Field plus a Match Method applied to a mapped, eligible object such as
+    Individual, a Contact Point, or Party Identification. All three match
+    methods are deterministic — Exact requires identical values (good for a
+    loyalty ID), Normalized ignores formatting differences (email, phone,
+    address), and Fuzzy tolerates typos but is limited to First Name — so
+    "Fuzzy" is emphatically not probabilistic. The Boolean structure is a
+    classic trap: criteria within a single rule are AND'd together, but a
+    record needs to satisfy only one rule out of the set, because rules are
+    OR'd, and each ruleset allows up to ten rules with up to ten criteria
+    each. The practical trade-off the exam tests is that adding more or looser
+    rules increases consolidation but raises the risk of false-positive
+    merges.
 - **Key facts:**
   - Match rule = **Object + Field + Match Method**. Eligible objects: Individual,
     Contact Point Address/App/Email/Phone/Social, Party Identification (must be
@@ -845,6 +1355,18 @@ DMO; Unified Individual vs Unified Link; deterministic vs "probabilistic."
 - **Exam section:** S4-harmonization (17%)
 - **Source:** https://www.redpointglobal.com/blog/deterministic-probabilistic-matching-identity-resolution/
 - **Type:** Third-party guide · **Source confidence:** triangulated
+  - **In depth:** This distinction exists mainly as a distractor trap:
+    deterministic matching relies on explicit shared identifiers and delivers
+    high confidence when data is clean, whereas probabilistic matching uses
+    statistical inference to guess at matches when identifiers are missing,
+    trading certainty for coverage and requiring large data volumes. The
+    load-bearing fact for the exam is that all of Data 360's native match
+    methods — Exact, Fuzzy, and Normalized — are deterministic and rule-based;
+    the platform ships with no out-of-the-box probabilistic or ML
+    confidence-score matching engine. The mistake questions are engineered to
+    catch is equating "Fuzzy" with "probabilistic": Fuzzy still applies a
+    fixed rule to tolerate typos, so any answer describing Data 360 as doing
+    probabilistic matching is wrong.
 - **Key facts:**
   - Deterministic = explicit identifiers, high confidence, needs clean data.
   - Probabilistic = statistical/fuzzy inference when identifiers are absent;
@@ -861,6 +1383,21 @@ DMO; Unified Individual vs Unified Link; deterministic vs "probabilistic."
 - **Exam section:** S4-harmonization (17%)
 - **Source:** https://trailhead.salesforce.com/content/learn/modules/data-and-identity-in-salesforce-cdp/select-identity-resolution-match-rules
 - **Type:** Trailhead module · **Source confidence:** direct
+  - **In depth:** Once match rules have determined that several source records
+    describe the same individual, reconciliation rules decide which single
+    value from those disagreeing sources gets written to each field of the
+    Unified Individual. There are three strategies to choose between — Last
+    Updated / Most Recent, Most Frequent, and Source Sequence / Source
+    Priority (rank sources and take the highest-ranked one that has data) —
+    and they can be set at the object level by default but overridden per
+    field, so one unified record can use recency for one attribute and source
+    priority for another. Critically, reconciliation never deletes or
+    overwrites the underlying source data and never pushes changes back to
+    connected source systems; the originals stay intact and remain traceable
+    through the Unified Link. The exam's clean summary to hold onto is that
+    matching decides which records are the same while reconciliation decides
+    which value wins, and you should be ready to pick, say, "source priority"
+    over "most recent" based on the scenario's intent.
 - **Key facts:**
   - Decide which single value writes to the **Unified Individual** field when
     matched sources disagree.
@@ -879,6 +1416,21 @@ DMO; Unified Individual vs Unified Link; deterministic vs "probabilistic."
 - **Exam section:** S4-harmonization (17%)
 - **Source:** https://trailhead.salesforce.com/content/learn/modules/data-and-identity-in-salesforce-cdp/get-to-know-unified-profiles
 - **Type:** Trailhead module · **Source confidence:** direct
+  - **In depth:** Unification in Data 360 is deliberately non-destructive, and
+    understanding its three layers is what separates right from wrong answers
+    here: the Individual DMO holds raw source records with no awareness of
+    unification, the Unified Individual DMO holds the final reconciled
+    attributes, and the Unified Link Individual DMO is the bridge that ties
+    each source Individual to its Unified Individual so lineage can always be
+    traced back. Together the Unified Individual and its Unified Link records
+    form the Unified Profile, related one-to-one per source record. The mental
+    model the exam rewards is "key ring, not golden record" — the unified
+    profile links source identities without collapsing or destroying them,
+    which keeps sources addressable and makes the approach faster and more
+    scalable than classic MDM. Because profiles are dynamic, they improve
+    automatically as source data changes or rulesets re-run, and the identity
+    graph is simply the network of linked identifiers traced through those
+    Unified Link objects.
 - **Key facts:**
   - Three layers: **Individual DMO** (raw source, no unification awareness);
     **Unified Link Individual DMO** (bridge linking each source Individual to its
@@ -901,6 +1453,19 @@ DMO; Unified Individual vs Unified Link; deterministic vs "probabilistic."
 - **Exam section:** S4-harmonization (17%)
 - **Source:** https://trailhead.salesforce.com/content/learn/modules/data-and-identity-in-salesforce-cdp/create-unified-individual-records
 - **Type:** Trailhead module · **Source confidence:** direct
+  - **In depth:** This card ties the whole section together as an ordered
+    pipeline: you ingest data, map and model it by harmonizing DLOs into DMOs,
+    execute an identity resolution ruleset, and only then does a Unified
+    Profile become available for segmentation and activation. The sequencing
+    is the point most scenario questions probe, because the steps are
+    dependent rather than interchangeable — harmonization must be correct
+    before identity resolution can produce meaningful results, and no amount
+    of match-rule tuning can rescue bad mappings or broken keys. The pre-work
+    (inventorying sources, identifying each system's unique IDs, assessing
+    data quality, and mapping the customer journey to the data you need)
+    reinforces that unification is a designed process, so when asked "what
+    must happen before identity resolution can run?" the answer is correct
+    harmonization, not more rules.
 - **Key facts:**
   - Pipeline: **(1) Ingest → (2) Map/Model (harmonize DLO→DMO) → (3) Identity
     Resolution ruleset execution → (4) Unified Profile available** for
@@ -917,6 +1482,18 @@ DMO; Unified Individual vs Unified Link; deterministic vs "probabilistic."
 - **Exam section:** S4-harmonization (17%)
 - **Source:** https://architect.salesforce.com/docs/architect/fundamentals/guide/data360_integration_patterns_and_practices
 - **Type:** Salesforce Doc · **Source confidence:** triangulated
+  - **In depth:** This card reframes harmonization as a deliberate design
+    exercise rather than a click-through, which is exactly the mindset the
+    exam expects. Good data design precedes mapping: you inventory each source
+    fully — schema, attributes, sample values, edge cases, primary and foreign
+    keys, API names — before you connect a single field. The mapping checklist
+    then works through object-type category (Profile, Engagement, or Other),
+    DLO-to-DMO best practices, object relationships and their cardinality,
+    data-type compatibility, and satisfaction of the required DMO mappings.
+    Cardinality is the detail most likely to surface in questions — for
+    example a Product ID foreign key on a Sales Order pointing to the Product
+    ID primary key on a Product Catalog — so be ready to reason about how
+    objects relate, not just that they map.
 - **Key facts:**
   - Data Design precedes mapping: full inventory (schema, attributes, sample
     values, edge cases, PK/FK, API names) per source.
@@ -941,6 +1518,21 @@ specific cost numbers as illustrative, not exam-quotable.
 - **Exam section:** S5-analysis (18%)
 - **Source:** https://help.salesforce.com/s/articleView?id=sf.c360_a_get_started_with_calculated_insights.htm
 - **Type:** Salesforce Doc · **Source confidence:** direct *(verified 2026-07-03)*
+  - **In depth:** Calculated Insights are Data 360's engine for turning your
+    unified, relational data into pre-computed metrics — think customer
+    lifetime value, average order value, or engagement scores — that can then
+    feed segmentation, activation, reports, and data graphs. They run as
+    scheduled batch Spark jobs (typically daily) rather than in real time,
+    because the whole point is to crunch across your entire estate: DMOs,
+    DLOs, and Unified Profiles joined together. The defining structural rule
+    is that every CI must combine at least one measure (an aggregated metric
+    like SUM or AVG) with at least one dimension (a group-by such as Customer
+    ID), and those two roles are not interchangeable — a CI with only a
+    measure or only a dimension is invalid. Whether you build it in the Visual
+    Insight Builder or in SQL, you are describing the same underlying object,
+    scoped to a single data space, so scenario questions often hinge on this
+    measure-plus-dimension requirement and on CI being batch rather than
+    streaming.
 - **Key facts:**
   - Built via the **Visual Insight Builder** or **SQL** (same underlying object);
     can also be created from templates or a data-kit package.
@@ -962,6 +1554,18 @@ specific cost numbers as illustrative, not exam-quotable.
 - **Exam section:** S5-analysis (18%)
 - **Source:** https://www.salesforceben.com/calculated-vs-streaming-insights-in-data-cloud-choosing-the-right-engine/
 - **Type:** Third-party guide · **Source confidence:** triangulated
+  - **In depth:** This card is the decision framework the exam repeatedly
+    tests: given a business goal, which insights engine do you recommend? The
+    mental model is latency versus scope — Calculated Insights runs periodic
+    batch jobs (often daily) over your full estate including Unified Profiles
+    and history, making it right for long-term understanding like CLV, churn,
+    or segmentation criteria. Streaming Insights uses Spark Structured
+    Streaming over rolling or tumbling windows to react within seconds to
+    minutes, but it can only see incoming engagement events, cannot join
+    Unified Profiles, and produces no lifetime metrics. Because streaming
+    compute is far more expensive than batch, the guiding heuristic is to
+    default to CI unless the requirement is genuinely time-sensitive (cart
+    abandonment, geofence), where only SI can act fast enough.
 - **Key facts:**
   - **CI** = periodic batch Spark (often daily), full estate (Unified Profiles,
     DMOs, DLOs, history).
@@ -979,6 +1583,21 @@ specific cost numbers as illustrative, not exam-quotable.
 - **Exam section:** S5-analysis (18%)
 - **Source:** https://help.salesforce.com/s/articleView?id=sf.c360_a_create_a_streaming_insight_using_sql.htm
 - **Type:** Salesforce Doc · **Source confidence:** direct *(verified 2026-07-03 — the old `c360_a_streaming_insights` URL 404s; this is the live page)*
+  - **In depth:** Streaming Insights is the near-real-time counterpart to
+    Calculated Insights, built to compute time-series aggregations over
+    engagement data as it arrives from sources like the Web/Mobile SDK,
+    Ingestion API, or Marketing Cloud Personalization streams. Its
+    architecture forces two rules that show up constantly in scenario
+    questions: the primary DMO must be the Engagement DMO — Profile and other
+    DMOs can only participate as a right-table join, which is precisely why an
+    SI cannot be built purely on Unified Profile data — and the SQL must
+    include a window function that defines a time frame using window.start and
+    window.end. You create it from the Calculated Insights tab, it needs the
+    Data Cloud Architect permission, and because it processes continuously its
+    last-run status always shows Processing while consuming credits the whole
+    time it is active. Pairing an SI with Data Actions is how you turn a
+    detected event into an immediate downstream trigger, so the exam pattern
+    'notify within minutes of an event' points to SI, not CI.
 - **Key facts:**
   - Compute streaming metrics across dimensions from **near-real-time** sources
     (Web/Mobile SDK, Ingestion API, MC Personalization streams); build time-
@@ -1002,6 +1621,21 @@ specific cost numbers as illustrative, not exam-quotable.
 - **Exam section:** S5-analysis (18%)
 - **Source:** https://help.salesforce.com/s/articleView?id=data.c360_a_data_graphs.htm
 - **Type:** Salesforce Doc · **Source confidence:** direct *(verified 2026-07-03)*
+  - **In depth:** A Data Graph solves a different problem from Calculated
+    Insights: instead of computing a metric, it pre-assembles chosen fields
+    from related DMOs into a single read-only record stored as one JSON blob,
+    so that a nested view like Customer to Orders to Items to Cases to
+    Products can be fetched in one fast call rather than many joins at query
+    time. This precalculation is what makes it near-instant and low on API
+    consumption, which is why it powers latency-sensitive uses such as
+    real-time identity resolution, real-time CIs, and real-time segmentation,
+    and why it is queried through the Query and Metadata APIs or viewed via
+    Data Explorer. It comes in two flavors — Standard, refreshed in batch over
+    minutes to hours, and Real-time/streaming, refreshed continuously — and it
+    complements rather than competes with CIs, since a CI's computed metric
+    can be embedded inside the graph. The exam distinction to lock in is that
+    a Data Graph is about connected structure for fast retrieval, whereas a CI
+    is about a computed SQL metric.
 - **Key facts:**
   - Combines chosen fields from your DMOs into a single **read-only data graph
     record** — all combined data in **one JSON blob**; because it's preprepared,
@@ -1027,6 +1661,18 @@ specific cost numbers as illustrative, not exam-quotable.
 - **Exam section:** S5-analysis (18%)
 - **Source:** https://trailhead.salesforce.com/content/learn/modules/data-graphs-in-data-cloud/get-to-know-data-graphs
 - **Type:** Trailhead module · **Source confidence:** triangulated
+  - **In depth:** This card sharpens the exact 'which would you use' framing
+    the exam favors by contrasting purpose rather than technology. A
+    Calculated Insight answers 'what is true or what should I calculate' — an
+    aggregated metric used as segmentation criteria or a personalization
+    attribute — while a Data Graph answers 'how is this connected and how fast
+    can I fetch it,' modeling real-world relationships like a full order,
+    case, and product history returned as one structured object. They are
+    complementary, not mutually exclusive: a CI's output can feed into a Data
+    Graph. Remember their consumption paths too, because questions test them —
+    graphs are consumed via the Query API as JSON and referenced in Flow,
+    Apex, or activation, whereas CIs surface in Reports, Segmentation, and
+    Activation.
 - **Key facts:**
   - **CI** when the goal is to define/analyze/enrich with an aggregated metric
     (segmentation criteria, personalization attributes).
@@ -1043,6 +1689,18 @@ specific cost numbers as illustrative, not exam-quotable.
 - **Exam section:** S5-analysis (18%)
 - **Source:** https://help.salesforce.com/s/articleView?id=data.c360_a_enrich_your_org_with_data_and_insights.htm
 - **Type:** Salesforce Doc · **Source confidence:** triangulated
+  - **In depth:** Enrichments are how Data 360 data becomes visible directly
+    on CRM record pages, and the exam tests them by pairing two variables:
+    whether identity resolution is required, and the cardinality of the data
+    being surfaced. Copy Fields perform a one-to-one field copy from a DMO
+    into CRM fields and, like standard Related Lists, depend on identity
+    resolution to tie the DMO to the Unified Individual or Account. Related
+    Lists surface one-to-many DMO data and likewise require that
+    identity-resolution linkage. The key differentiator to memorize is the
+    Direct-DMO Related List variant, which pulls from any DMO connected
+    through a direct relationship and therefore does not require identity
+    resolution at all — so a scenario where identity resolution isn't set up
+    points you to the direct-DMO path.
 - **Key facts:**
   - Two enrichment types surface Data 360 data on CRM record pages: **Copy
     Fields** and **Related Lists** (incl. a **Direct-DMO Related List** variant).
@@ -1060,6 +1718,18 @@ specific cost numbers as illustrative, not exam-quotable.
 - **Exam section:** S5-analysis (18%)
 - **Source:** https://help.salesforce.com/s/articleView?id=analytics.rd_dc_reports_calculated_insights_limits.htm
 - **Type:** Salesforce Doc · **Source confidence:** direct
+  - **In depth:** Because a Calculated Insight is already an aggregated
+    object, reports built on it inherit a specific set of limitations that the
+    exam frames as 'why can't I add X to this component.' A CI report needs at
+    least one aggregatable non-text measure and at least one dimension, and it
+    can only render as a summary report — no detail rows, grand totals, or row
+    counts — since there are no underlying raw rows to show. You also cannot
+    add row or summary formulas or re-aggregate a measure that has already
+    been aggregated. On top of that, the number of dimensions gates which
+    charts are available, and dashboard components on CI reports cannot be
+    tabular, metric, or gauge — so the mental model is that CI's
+    pre-aggregated nature is the root cause of every one of these
+    restrictions.
 - **Key facts:**
   - CI report needs ≥1 aggregatable non-text measure + ≥1 dimension; renders as
     **summary reports only** — no detail rows, grand totals, or row counts.
@@ -1076,6 +1746,17 @@ specific cost numbers as illustrative, not exam-quotable.
 - **Exam section:** S5-analysis (18%)
 - **Source:** https://www.salesforce.com/analytics/tableau-next/
 - **Type:** Salesforce Doc · **Source confidence:** triangulated
+  - **In depth:** This card asks you to distinguish the new Data-360-native
+    analytics story from the classic connector approach. Tableau Next is built
+    directly on Data 360's unified layer and natively integrates Agentforce,
+    querying Data 360 in place rather than against a separate warehouse, while
+    Tableau Semantics is the AI-infused semantic layer that models each metric
+    once so both Tableau Next and Agentforce reuse the same definition.
+    Classic Tableau, by contrast, reaches Data 360 through a built-in
+    connector or via Tableau Semantics. The security point the exam stresses
+    is that access stays data-space aware — the user's OAuth login determines
+    which spaces are visible, so Data 360's governance is inherited and
+    carried through, never bypassed by the analytics tool.
 - **Key facts:**
   - **Tableau Next** is built directly on Data 360's unified layer + natively
     integrates Agentforce — queries Data 360 directly (not a separate warehouse).
@@ -1092,6 +1773,19 @@ specific cost numbers as illustrative, not exam-quotable.
 - **Exam section:** S5-analysis (18%)
 - **Source:** https://trailhead.salesforce.com/content/learn/modules/predictive-outputs-from-model-builder/build-a-predictive-model-in-model-builder
 - **Type:** Trailhead module · **Source confidence:** triangulated
+  - **In depth:** This is Data 360's native predictive-AI path: Einstein
+    Studio is the command center for AI models, and Model Builder is its
+    clicks-not-code way to train on data already unified in Data 360. Two
+    facts anchor most questions — there are exactly two supported model types,
+    binary classification (yes/no) and regression (numeric), and each needs a
+    labeled training DMO whose target is a real column, evaluated with AUC for
+    classification or R-squared for regression. Predictions don't overwrite
+    the source record; they land in a new output DMO holding just the
+    prediction plus identifiers, which you then reference from segments,
+    activation, CIs, Flow, or Prompt Builder. When a model must be trained
+    outside Salesforce, the BYOM path lets you connect externally trained
+    models from SageMaker, Vertex AI, or Databricks instead of building in
+    Model Builder.
 - **Key facts:**
   - **Einstein Studio** = AI model command center; **Model Builder** = clicks,
     no code.
@@ -1112,6 +1806,17 @@ specific cost numbers as illustrative, not exam-quotable.
 - **Exam section:** S5-analysis (18%)
 - **Source:** https://www.salesforce.com/data/zero-copy-partner-network/guide/
 - **Type:** Salesforce Doc · **Source confidence:** triangulated
+  - **In depth:** Zero Copy is Data 360's answer to moving data between it and
+    external platforms without ever duplicating it, and the exam tests the
+    directional distinction. Federation is inbound — Data 360 queries external
+    data in place through Live Query, pulling on demand from platforms like
+    Snowflake, Redshift, BigQuery, Databricks, Azure Fabric, or generic SQL —
+    whereas Sharing is outbound, letting Data 360 expose its own data to a
+    receiver who reads it without copying or storing it. Neither direction
+    creates a duplicate, and together they enable two-way access with no data
+    movement. Crucially, Sharing preserves Data 360's security and governance
+    so that data-space permissions carry through, which is what makes it the
+    foundation for Clean Rooms and privacy-safe cross-party collaboration.
 - **Key facts:**
   - **Federation** = Data 360 queries external data in place (Live Query, pull
     on demand); **Sharing** = Data 360 shares its own data OUT without the
@@ -1135,6 +1840,21 @@ Trailhead points — data actions/Flow automation is heavily emphasized.
 - **Exam section:** S6-activation (20%)
 - **Source:** https://help.salesforce.com/s/articleView?id=data.c360_a_segments.htm
 - **Type:** Salesforce Doc · **Source confidence:** direct *(verified 2026-07-03)*
+  - **In depth:** A segment is the fundamental unit of activation in Data 360,
+    and the very first decision you make when building one — the "Segment On"
+    object — silently constrains everything downstream, because it defines
+    both the grain of your audience (are you counting people or households?)
+    and which attributes and calculated insights you can even filter on. This
+    is why Unified Individual, the product of identity resolution, is the
+    recommended base for multi-source scenarios: choosing the plain Individual
+    DMO instead means you're segmenting over un-reconciled, potentially
+    duplicated records. Once the base is set, you refine with filters drawn
+    from direct attributes, related attributes, or calculated insights, but a
+    CI filter only works if it references the Segment On DMO and exposes that
+    DMO's primary key as a dimension. The composite-key caveat matters because
+    the Segment Canvas joins on a single field, so a DMO with a multi-field
+    key produces silently inaccurate counts — the exam loves testing whether
+    you know to insist on a single, unique primary key.
 - **Key facts:**
   - A segment starts by choosing **"Segment On"** — the DMO it's built against;
     determines available attributes + grain (person vs household).
@@ -1158,6 +1878,20 @@ Trailhead points — data actions/Flow automation is heavily emphasized.
 - **Exam section:** S6-activation (20%)
 - **Source:** https://help.salesforce.com/s/articleView?id=data.c360_a_segments.htm
 - **Type:** Salesforce Doc · **Source confidence:** direct *(verified 2026-07-03)*
+  - **In depth:** Beyond the default Standard segment, Data 360 offers three
+    specialized types that each trade off latency, exclusivity, or persistence
+    to fit a specific engagement pattern, and scenario questions almost always
+    hinge on matching the requirement to the right type. Standard segments
+    recalculate and publish on a schedule or on demand, while Real-Time
+    segments resolve in milliseconds against a real-time data graph — but that
+    speed comes at the cost of features like exclusion criteria, nested batch
+    segments, and manual publish. Waterfall segments enforce mutual
+    exclusivity by ranking a priority-ordered list so each person lands in
+    only their single highest-priority match, which is the canonical "one best
+    offer per person" pattern. Dynamic segments run their queries at execution
+    time without persisting membership to a Segment Membership DMO, using
+    placeholder filters resolved on the fly — the choice when you don't want a
+    stored point-in-time audience.
 - **Key facts:**
   - **Standard** — built on a DMO, published on a schedule or on demand.
   - **Real-Time** — completes on demand in **milliseconds**; add Segment ID +
@@ -1176,6 +1910,18 @@ Trailhead points — data actions/Flow automation is heavily emphasized.
 - **Exam section:** S6-activation (20%)
 - **Source:** https://help.salesforce.com/s/articleView?id=data.c360_a_nested_segments.htm
 - **Type:** Salesforce Doc · **Source confidence:** triangulated
+  - **In depth:** This card is about the mechanics of building complex segment
+    logic on the canvas, where each criteria row is a Container evaluating one
+    attribute and containers combine with AND/OR into layered logic. The
+    distinction between the INCLUDE and EXCLUDE tabs is conceptually
+    important: rather than writing negated conditions, you place removal logic
+    on the Exclude tab, which strips matching individuals out of the audience
+    — a cleaner mental model than trying to invert every operator. Segments
+    can also be nested inside one another as reusable filters, and the
+    exam-critical choice is the reference mode: Definition re-runs the nested
+    segment's logic live for freshness, while Membership reuses the last
+    published membership for speed. When a scenario stresses performance or
+    refresh time, Membership mode is the answer.
 - **Key facts:**
   - Each criteria row = a **Container** on one attribute; combine with AND/OR up
     to **5 levels** of nested logic.
@@ -1193,6 +1939,19 @@ Trailhead points — data actions/Flow automation is heavily emphasized.
 - **Exam section:** S6-activation (20%)
 - **Source:** https://help.salesforce.com/s/articleView?id=data.c360_a_rapid_segment_publish.htm
 - **Type:** Salesforce Doc · **Source confidence:** direct *(verified 2026-07-03)*
+  - **In depth:** Publishing is how a segment's membership actually reaches
+    its targets, and Data 360 gives you two cadences that differ in speed,
+    capacity, and reversibility. Standard publishing runs on a 12-to-24-hour
+    rhythm and can reach back across a long window of engagement data, whereas
+    Rapid publishing runs on tighter 1-hour or 4-hour intervals with a
+    configurable lookback and an incremental refresh mode, but it is capped
+    per org — making it a scarce resource you allocate to your most
+    time-sensitive audiences. The exam frequently tests the one-way
+    constraint: once a segment is created as Standard you cannot promote it to
+    Rapid (only Rapid-to-Standard is allowed), and a common trap is forgetting
+    that a segment won't publish at all unless an activation is configured.
+    Note too that Rapid isn't MCE-only — it can target Data Cloud and file
+    storage as well — a correction the exam may probe directly.
 - **Key facts:**
   - **Standard:** every **12–24 hrs**; up to last **2 years** of Engagement data.
   - **Rapid:** runs on a daily schedule at a **1-hour or 4-hour interval**;
@@ -1213,6 +1972,17 @@ Trailhead points — data actions/Flow automation is heavily emphasized.
 - **Exam section:** S6-activation (20%)
 - **Source:** https://help.salesforce.com/s/articleView?id=data.c360_a_publish_segment.htm
 - **Type:** Salesforce Doc · **Source confidence:** triangulated
+  - **In depth:** These two verbs are easy to conflate but the exam treats
+    them as distinct steps in one pipeline: Refresh recalculates who belongs
+    in the segment against current data, while Publish sends that refreshed
+    membership out to activation targets — and crucially, publish always
+    performs the refresh as part of the operation. Each publish writes a
+    point-in-time Segment Membership object, so membership is a snapshot, not
+    a continuously live view. The practical consequence, and the thing
+    scenario questions probe, is that downstream systems are only eventually
+    consistent: a target like an MCE Dynamic List won't reflect changes until
+    the segment publishes, and can lag afterward, so you should never assume
+    real-time propagation from a scheduled publish.
 - **Key facts:**
   - **Refresh** = recalculate membership vs current data; **Publish** = send
     refreshed membership to targets (refresh happens as part of publish).
@@ -1227,6 +1997,18 @@ Trailhead points — data actions/Flow automation is heavily emphasized.
 - **Exam section:** S6-activation (20%)
 - **Source:** https://help.salesforce.com/s/articleView?id=data.c360_a_segment_membership_data.htm
 - **Type:** Salesforce Doc · **Source confidence:** triangulated
+  - **In depth:** When a segment publishes, Data 360 automatically
+    materializes its results into a Segment Membership DMO — the queryable
+    record of exactly which profile IDs qualified — which turns segment output
+    into first-class data you can join and analyze rather than a
+    fire-and-forget send. Each Segment-On type gets two flavors: a Latest
+    object reflecting the most recent publish and a Historical object
+    retaining prior publishes, the latter being what enables trend and cohort
+    analysis over time. Because the object carries the Segment Id alongside
+    the (Unified) Individual Id, it joins cleanly to other DMOs, and you can
+    interrogate it through SOQL, SQL in the Query Workspace, the Query API, or
+    the Segmentation REST API. The key exam takeaway is simply that membership
+    is durable, queryable data with a Latest-versus-Historical split.
 - **Key facts:**
   - Publishing auto-generates a **Segment Membership DMO** (which profile IDs
     belong).
@@ -1242,6 +2024,18 @@ Trailhead points — data actions/Flow automation is heavily emphasized.
 - **Exam section:** S6-activation (20%)
 - **Source:** https://help.salesforce.com/s/articleView?id=data.c360_a_activation_targets.htm
 - **Type:** Salesforce Doc · **Source confidence:** triangulated
+  - **In depth:** Activation is the delivery layer of Data 360 — the step that
+    takes a segment or DMO and pushes its records, along with selected
+    attributes and calculated insights keyed by Data 360 IDs, to wherever they
+    need to act. It helps to keep the vocabulary straight: an Activation
+    Target is the destination (a place), while an Activation is the publish
+    process that sends data there (an action). The target catalog spans four
+    broad categories worth memorizing — Marketing Cloud Engagement business
+    units, the Data Cloud/Data 360 target that surfaces data inside Sales and
+    Service Cloud, file storage like S3 and SFTP, and external advertising
+    platforms such as Meta and LiveRamp. The newer Activation-Triggered Flows
+    feature is the bridge to native automation, letting a Flow fire
+    automatically the moment an activation publishes.
 - **Key facts:**
   - **Activation Target** = where audience/DMO records are delivered;
     **Activation** = the publish process to that target.
@@ -1260,6 +2054,17 @@ Trailhead points — data actions/Flow automation is heavily emphasized.
 - **Exam section:** S6-activation (20%)
 - **Source:** https://www.salesforceben.com/types-of-data-targets-in-data-cloud-activations-vs-data-actions/
 - **Type:** Third-party guide · **Source confidence:** triangulated
+  - **In depth:** This is one of the most frequently tested either/or
+    distinctions in the whole exam, and the mental model is bulk-versus-event.
+    An Activation sends a segment's golden records — a whole audience with its
+    historical attributes and insights — on a schedule for ongoing engagement,
+    so it is inherently batch-oriented. A Data Action, by contrast, fires the
+    instant a single DMO or CI record changes, pushing only that current event
+    payload (no history) to a Platform Event, Webhook, or Marketing Cloud
+    Journey Builder entry event to trigger one immediate downstream
+    automation. Whenever a scenario describes reacting to a real-time,
+    record-level change, think Data Action; whenever it describes sending or
+    refreshing a large audience, think Activation.
 - **Key facts:**
   - **Activation** = send a segment's "golden records" (bulk audience, historical
     attributes/insights) for ongoing engagement.
@@ -1277,6 +2082,17 @@ Trailhead points — data actions/Flow automation is heavily emphasized.
 - **Exam section:** S6-activation (20%)
 - **Source:** https://help.salesforce.com/s/articleView?id=data.c360_a_data_actions_cdp.htm
 - **Type:** Salesforce Doc · **Source confidence:** triangulated
+  - **In depth:** This card zooms into the automation side of Data Actions,
+    and its headline capability is that a DMO change can trigger a Salesforce
+    Flow directly — the declarative "Trigger Flows with Data 360 Data" pattern
+    — so you can run business logic off unified data without duplicating it
+    into the core CRM. That no-duplication point is why this approach is
+    attractive: the Flow reacts to the Data 360 event rather than requiring
+    the data to be copied into standard objects first. As with the broader
+    Data Actions concept, this is strictly for single-event, record-level
+    reactions and never for bulk datasets, which remain the domain of
+    Activations. MCE is also a supported target here via Journey Builder entry
+    events, reinforcing that Data Actions are the real-time trigger mechanism.
 - **Key facts:**
   - Data Actions push DMO/CI-change events to a target that triggers automation/
     workflows.
@@ -1292,6 +2108,19 @@ Trailhead points — data actions/Flow automation is heavily emphasized.
 - **Exam section:** S6-activation (20%)
 - **Source:** https://help.salesforce.com/s/articleView?id=sf.c360_a_contact_points.htm
 - **Type:** Salesforce Doc · **Source confidence:** triangulated
+  - **In depth:** Contact Points are the DMOs that hold the channel
+    identifiers — email, phone, address, app — attached to a unified profile,
+    and they exist because you cannot deliver an audience anywhere without at
+    least one reachable identifier. The exam tests this as a hard
+    prerequisite: activating to MCE requires at least one of Email Address,
+    Mobile App identifier, or Phone Number, while activating to external and
+    advertising platforms requires at least one of Email, OTT ID, Phone, or
+    Mobile Advertiser ID (MAID). When multiple source systems supply
+    conflicting values for the same contact point, a Source Priority Order
+    rule decides which value wins — and it's worth noting this resolution is
+    independent of the identity-resolution reconciliation rules. Knowing which
+    contact-point types satisfy which target's minimum is exactly the kind of
+    prerequisite a question will hinge on.
 - **Key facts:**
   - Contact Points = DMOs for channels/identifiers on a unified profile (Email,
     Phone, Address, App).
@@ -1309,6 +2138,17 @@ Trailhead points — data actions/Flow automation is heavily emphasized.
 - **Exam section:** S6-activation (20%)
 - **Source:** https://trailhead.salesforce.com/content/learn/modules/advertising-with-data-cloud/craft-effective-advertising-with-data-cloud
 - **Type:** Trailhead module · **Source confidence:** triangulated
+  - **In depth:** Advertising Audiences is best understood not as a separate
+    legacy product but as one activation-target category within Data 360 — the
+    path that turns unified first-party profiles into audiences pushed to
+    Meta, Google, Amazon Ads, Trade Desk, and a large partner ecosystem. Its
+    strategic significance is that it is the designated migration path off the
+    retired Advertising Studio, re-anchoring advertising on Data 360's own
+    identity resolution and segmentation rather than a standalone tool.
+    Because it targets external platforms, it inherits the same contact-point
+    minimums as any external activation — Email, OTT ID, Phone, or MAID. The
+    exam framing to hold onto is that ad audiences are simply an activation
+    destination, so the general activation rules apply.
 - **Key facts:**
   - Ad Audiences activates unified first-party profiles as ad audiences to Meta,
     Google, Amazon Ads, Trade Desk, 100+ partners.
@@ -1323,6 +2163,18 @@ Trailhead points — data actions/Flow automation is heavily emphasized.
 - **Exam section:** S6-activation (20%)
 - **Source:** https://trailhead.salesforce.com/content/learn/modules/data-clouddriven-interactions-in-marketing-cloud
 - **Type:** Trailhead module · **Source confidence:** direct
+  - **In depth:** This card describes the Data-360-to-MCE pipeline, where
+    segments activate directly into Marketing Cloud Engagement and Journey
+    Builder to become the entry sources and audiences that drive journeys. The
+    supporting concept is Engagement DMOs, a distinct category of objects that
+    model each individual interaction — opens, clicks, and the like — with
+    dozens of attributes linking the event to a person, a message, and a
+    moment in time, which is what lets marketing behavior feed back into
+    unified profiles. Nothing flows until an MCE Connection and Activation
+    Target are configured, so that setup is a prerequisite the exam may test.
+    The typical architecture combines differently-cadenced sources — CRM
+    streaming frequently, MCE syncing daily — into a single reconciled
+    profile.
 - **Key facts:**
   - Segments activate directly into MCE + Journey Builder — segments become entry
     sources/audiences for journeys.
@@ -1340,6 +2192,19 @@ Trailhead points — data actions/Flow automation is heavily emphasized.
 - **Exam section:** S6-activation (20%)
 - **Source:** https://trailhead.salesforce.com/content/learn/modules/advanced-rag-with-data-360-and-agentforce/get-started-with-grounding-agents-in-data-360
 - **Type:** Trailhead module · **Source confidence:** direct
+  - **In depth:** Grounding is the practice of injecting relevant, trustworthy
+    context into an LLM prompt so Agentforce produces accurate, specific
+    answers instead of generic or hallucinated ones, and Data 360 serves as
+    the unified data layer that supplies that context. The exam wants you to
+    recognize the RAG chain as the mechanism: a Search Index makes structured
+    (DMO/DLO) or unstructured (text, file) data searchable, a Retriever
+    queries that index (wrapping Einstein Search, either the auto-created
+    default per index or a Custom Retriever you build), and a Prompt Template
+    in Prompt Builder attaches the retriever to inject grounded content at run
+    time. Memorizing that ordered pipeline — Search Index to Retriever to
+    Prompt Template — is the single most reliably tested fact in this card. It
+    positions Data 360 as the retrieval foundation beneath Agentforce's
+    generative capabilities.
 - **Key facts:**
   - **Grounding** = adding contextual data to a prompt so LLM output is accurate,
     not generic; Data 360 is the unified data layer beneath Agentforce.
@@ -1357,6 +2222,18 @@ Trailhead points — data actions/Flow automation is heavily emphasized.
 - **Exam section:** S6-activation (20%)
 - **Source:** https://help.salesforce.com/s/articleView?id=data.c360_a_data_cloud_lightning_apps_configure_profile_related_records.htm
 - **Type:** Salesforce Doc · **Source confidence:** triangulated
+  - **In depth:** This is the activation target that brings unified data back
+    into the CRM experience itself, surfacing Data 360 records on Contact,
+    Account, and Case pages as Dynamic or Data 360 Related Lists — and its
+    defining characteristic is that it does so without duplicating data into
+    the core CRM. Those related lists render live queries, so a rep sees
+    current web behavior, purchases, loyalty status, and cases directly in the
+    console rather than a stale copy. A subtle distinction the exam may draw
+    is that Service "data query" use cases operate on data at rest — queried
+    in batch or on demand rather than streamed in real time — so don't assume
+    every in-console view is live-streamed. Consumption of this capability is
+    metered through the Digital Wallet, reflecting Data 360's usage-based
+    pricing model.
 - **Key facts:**
   - The Data 360 activation target surfaces unified data on record pages
     (Contact/Account/Case) as Dynamic/Data 360 Related Lists — **no CRM
