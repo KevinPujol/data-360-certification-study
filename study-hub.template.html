@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f2ea">
+  <title>Data 360 Study Flight Plan</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap');
+    :root {
+      --ink: #152925; --muted: #62706c; --paper: #f5f2ea; --card: #fffdf8;
+      --line: #d8ddd5; --green: #0c705d; --green-2: #d9eee7; --orange: #ed7c42;
+      --orange-2: #fbe6d8; --blue: #2b5c75; --red: #b84f42; --shadow: 0 18px 50px rgba(28, 50, 44, .09);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; color: var(--ink); background: var(--paper); font-family: "DM Sans", system-ui, sans-serif; }
+    button, input { font: inherit; }
+    button { color: inherit; }
+    .app { min-height: 100vh; }
+    .topbar { position: sticky; top: 0; z-index: 20; height: 70px; display: flex; align-items: center; gap: 26px; padding: 0 4vw; background: rgba(245,242,234,.92); border-bottom: 1px solid rgba(21,41,37,.1); backdrop-filter: blur(18px); }
+    .brand { display: flex; align-items: center; gap: 11px; min-width: 230px; font: 800 15px/1 "Manrope", sans-serif; letter-spacing: -.02em; }
+    .brand-mark { width: 32px; height: 32px; display: grid; place-items: center; color: white; background: var(--green); border-radius: 10px 10px 10px 3px; font-size: 17px; }
+    .tabs { display: flex; align-self: stretch; gap: 6px; }
+    .tab { position: relative; border: 0; background: transparent; padding: 0 14px; cursor: pointer; color: var(--muted); font-weight: 700; font-size: 14px; }
+    .tab.active { color: var(--ink); }
+    .tab.active::after { content:""; position:absolute; bottom:0; left:14px; right:14px; height:3px; background: var(--orange); border-radius: 3px 3px 0 0; }
+    .top-actions { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+    .saved-pill { color: var(--green); font-size: 12px; font-weight: 700; opacity: 0; transition: opacity .2s; }
+    .saved-pill.show { opacity: 1; }
+    .btn { border: 1px solid var(--line); background: var(--card); border-radius: 10px; padding: 10px 14px; font-weight: 700; font-size: 13px; cursor: pointer; transition: .18s ease; }
+    .btn:hover { transform: translateY(-1px); border-color: #9eaaa4; }
+    .btn.primary { color: white; background: var(--green); border-color: var(--green); }
+    main { width: min(1180px, 92vw); margin: 0 auto; padding: 42px 0 80px; }
+    .view { display: none; animation: rise .28s ease; }
+    .view.active { display: block; }
+    @keyframes rise { from { opacity: 0; transform: translateY(7px); } }
+    .eyebrow { color: var(--orange); text-transform: uppercase; letter-spacing: .16em; font: 800 11px/1 "Manrope", sans-serif; }
+    h1, h2, h3 { font-family: "Manrope", sans-serif; letter-spacing: -.04em; }
+    h1 { max-width: 760px; margin: 13px 0 16px; font-size: clamp(38px, 6vw, 68px); line-height: .98; }
+    .lede { max-width: 690px; margin: 0; color: var(--muted); font-size: 17px; line-height: 1.65; }
+    .hero { display: grid; grid-template-columns: 1.35fr .65fr; gap: 30px; align-items: end; padding: 35px 0 42px; }
+    .hero-card { padding: 23px; color: white; background: var(--ink); border-radius: 20px; box-shadow: var(--shadow); }
+    .hero-card .label { color: #9ebbb3; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; }
+    .hero-card .big { margin: 10px 0 5px; font: 800 31px/1 "Manrope"; }
+    .hero-card p { margin: 0 0 18px; color: #c7d4d0; font-size: 13px; line-height: 1.5; }
+    .hero-card .btn { width: 100%; }
+    .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 38px; }
+    .metric { padding: 20px; background: var(--card); border: 1px solid var(--line); border-radius: 16px; }
+    .metric strong { display: block; font: 800 25px/1 "Manrope"; }
+    .metric span { display: block; margin-top: 7px; color: var(--muted); font-size: 12px; font-weight: 600; }
+    .section-head { display: flex; align-items: end; justify-content: space-between; gap: 20px; margin: 36px 0 18px; }
+    .section-head h2 { margin: 0; font-size: 28px; }
+    .section-head p { margin: 5px 0 0; color: var(--muted); }
+    .roadmap { position: relative; display: grid; gap: 12px; }
+    .stage { display: grid; grid-template-columns: 68px 1fr auto; gap: 20px; align-items: center; padding: 21px; background: var(--card); border: 1px solid var(--line); border-radius: 16px; cursor: pointer; transition: .2s; }
+    .stage:hover { transform: translateX(4px); box-shadow: 0 10px 25px rgba(28,50,44,.07); }
+    .stage.done { background: #eef7f3; border-color: #b8d8cc; }
+    .stage-num { width: 48px; height: 48px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 50%; font: 800 16px "Manrope"; }
+    .stage.done .stage-num { color: white; background: var(--green); border-color: var(--green); }
+    .stage h3 { margin: 0 0 5px; font-size: 17px; letter-spacing: -.02em; }
+    .stage p { margin: 0; color: var(--muted); font-size: 13px; }
+    .chips { display: flex; justify-content: flex-end; gap: 6px; margin-top: 8px; }
+    .chip { display: inline-flex; padding: 5px 8px; color: var(--blue); background: #e6eff1; border-radius: 99px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; }
+    .chip.weight { color: #914620; background: var(--orange-2); }
+    .check { width: 28px; height: 28px; border: 2px solid #b4beb9; border-radius: 8px; background: transparent; cursor: pointer; }
+    .stage.done .check { color: white; background: var(--green); border-color: var(--green); }
+    .stage.done .check::after { content: "✓"; font-weight: 800; }
+    .content-layout { display: grid; grid-template-columns: 250px 1fr; gap: 28px; align-items: start; }
+    .side { position: sticky; top: 95px; }
+    .search { width: 100%; margin-bottom: 14px; padding: 12px 13px; color: var(--ink); background: var(--card); border: 1px solid var(--line); border-radius: 10px; outline: none; }
+    .search:focus { border-color: var(--green); box-shadow: 0 0 0 3px var(--green-2); }
+    .side-nav { display: grid; gap: 5px; }
+    .side-nav button { text-align: left; padding: 11px 12px; border: 0; border-radius: 9px; background: transparent; color: var(--muted); cursor: pointer; font-weight: 700; font-size: 12px; }
+    .side-nav button.active { color: var(--green); background: var(--green-2); }
+    .lesson-intro { padding: 30px; margin-bottom: 16px; color: white; background: var(--blue); border-radius: 18px; }
+    .lesson-intro h2 { margin: 6px 0 7px; }
+    .lesson-intro p { margin: 0; color: #d5e3e8; }
+    .lesson-card { padding: 24px 26px; margin-bottom: 12px; background: var(--card); border: 1px solid var(--line); border-radius: 15px; }
+    .lesson-card h3 { margin: 0 0 14px; font-size: 18px; letter-spacing: -.025em; }
+    .lesson-card ul { padding-left: 20px; margin: 0; color: #40514c; line-height: 1.58; }
+    .lesson-card li + li { margin-top: 8px; }
+    .why { margin-top: 17px; padding: 12px 14px; background: var(--orange-2); border-left: 3px solid var(--orange); border-radius: 3px 9px 9px 3px; font-size: 12px; line-height: 1.5; }
+    .bookmark { float: right; border: 0; background: transparent; color: #89958f; font-size: 20px; cursor: pointer; }
+    .bookmark.saved { color: var(--orange); }
+    .quiz-shell { max-width: 920px; margin: 0 auto; }
+    .quiz-top { display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: end; margin-bottom: 20px; }
+    .quiz-top h1 { font-size: clamp(34px, 5vw, 56px); margin-bottom: 8px; }
+    .filters { display: flex; flex-wrap: wrap; gap: 7px; margin: 20px 0; }
+    .filter { border: 1px solid var(--line); background: var(--card); border-radius: 99px; padding: 8px 11px; cursor: pointer; font-size: 11px; font-weight: 800; }
+    .filter.active { color: white; background: var(--ink); border-color: var(--ink); }
+    .quiz-card { padding: clamp(24px, 5vw, 42px); background: var(--card); border: 1px solid var(--line); border-radius: 22px; box-shadow: var(--shadow); }
+    .quiz-meta { display: flex; justify-content: space-between; color: var(--muted); font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
+    .progress-bar { height: 7px; margin: 16px 0 27px; overflow: hidden; background: #e7e9e3; border-radius: 99px; }
+    .progress-bar i { display: block; height: 100%; width: 0; background: var(--orange); border-radius: inherit; transition: width .25s; }
+    .prompt { margin: 0 0 24px; font: 700 clamp(18px, 3vw, 24px)/1.38 "Manrope"; letter-spacing: -.025em; }
+    .option-list { display: grid; gap: 10px; }
+    .option { width: 100%; display: grid; grid-template-columns: 32px 1fr; gap: 12px; align-items: center; text-align: left; padding: 14px; border: 1px solid var(--line); background: #fff; border-radius: 12px; cursor: pointer; line-height: 1.42; }
+    .option:hover:not(:disabled) { border-color: var(--green); background: #f4faf7; }
+    .option .letter { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 8px; background: #edf0eb; font-weight: 800; }
+    .option.selected { border-color: var(--blue); background: #eef4f7; }
+    .option.correct { border-color: var(--green); background: var(--green-2); }
+    .option.wrong { border-color: var(--red); background: #f9e5e1; }
+    .feedback { display: none; margin-top: 18px; padding: 17px; border-radius: 12px; line-height: 1.5; font-size: 13px; }
+    .feedback.show { display: block; }
+    .feedback.good { color: #0a5143; background: var(--green-2); }
+    .feedback.bad { color: #7b332b; background: #f9e5e1; }
+    .quiz-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 18px; }
+    .quiz-actions small { color: var(--muted); }
+    .scorebox { min-width: 155px; padding: 18px; text-align: center; background: var(--orange-2); border-radius: 16px; }
+    .scorebox strong { display: block; font: 800 28px/1 "Manrope"; }
+    .scorebox span { color: #895339; font-size: 11px; font-weight: 700; }
+    .empty { padding: 50px; text-align: center; color: var(--muted); }
+    footer { padding: 25px 4vw; color: var(--muted); border-top: 1px solid var(--line); text-align: center; font-size: 12px; }
+    @media (max-width: 800px) {
+      .topbar { height: auto; padding: 12px 4vw; flex-wrap: wrap; gap: 8px; }
+      .brand { min-width: 0; margin-right: auto; }
+      .tabs { order: 3; width: 100%; height: 42px; overflow-x: auto; }
+      .tab { flex: 1; }
+      .top-actions .saved-pill, .top-actions .btn:not(.primary) { display: none; }
+      main { padding-top: 20px; }
+      .hero { grid-template-columns: 1fr; }
+      .metrics { grid-template-columns: 1fr 1fr; }
+      .content-layout { grid-template-columns: 1fr; }
+      .side { position: static; }
+      .side-nav { display: flex; overflow-x: auto; padding-bottom: 5px; }
+      .side-nav button { white-space: nowrap; }
+      .stage { grid-template-columns: 48px 1fr auto; gap: 11px; padding: 16px; }
+      .stage-num { width: 42px; height: 42px; }
+      .stage p { display: none; }
+      .quiz-top { grid-template-columns: 1fr; }
+      .scorebox { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark">D</span> Data 360 Flight Plan</div>
+      <nav class="tabs" aria-label="Main navigation">
+        <button class="tab active" data-view="roadmap">Roadmap</button>
+        <button class="tab" data-view="learn">Study notes</button>
+        <button class="tab" data-view="practice">Practice test</button>
+      </nav>
+      <div class="top-actions">
+        <span class="saved-pill" id="savedPill">Progress saved</span>
+        <button class="btn" id="resetBtn">Reset</button>
+        <button class="btn primary" id="resumeBtn">Resume study</button>
+      </div>
+    </header>
+
+    <main>
+      <section id="roadmap" class="view active">
+        <div class="hero">
+          <div>
+            <div class="eyebrow">Salesforce Certified Data 360 Consultant</div>
+            <h1>Your route from scattered data to exam ready.</h1>
+            <p class="lede">A dependency-aware study plan for Data-Con-101. Work the stages in order, mark milestones, and use your saved bookmark to return to the exact lesson or question you left.</p>
+          </div>
+          <aside class="hero-card">
+            <div class="label">Continue from bookmark</div>
+            <div class="big" id="resumeTitle">Stage 1</div>
+            <p id="resumeCopy">Start with solution positioning and the Data 360 value story.</p>
+            <button class="btn primary" id="heroResume">Continue studying →</button>
+          </aside>
+        </div>
+        <div class="metrics">
+          <div class="metric"><strong id="stageMetric">0 / 8</strong><span>Stages completed</span></div>
+          <div class="metric"><strong id="questionMetric">0</strong><span>Questions answered</span></div>
+          <div class="metric"><strong id="accuracyMetric">—</strong><span>Practice accuracy</span></div>
+          <div class="metric"><strong>70%</strong><span>Target pass score</span></div>
+        </div>
+        <div class="section-head">
+          <div><h2>Eight-stage roadmap</h2><p>About 24–26 focused hours, weighted to the exam blueprint.</p></div>
+        </div>
+        <div id="roadmapList" class="roadmap"></div>
+      </section>
+
+      <section id="learn" class="view">
+        <div class="section-head">
+          <div><div class="eyebrow">Knowledge base</div><h2>Study notes</h2><p>Exam-focused concepts, traps, and decision boundaries.</p></div>
+        </div>
+        <div class="content-layout">
+          <aside class="side">
+            <input id="lessonSearch" class="search" type="search" placeholder="Search concepts…" aria-label="Search study notes">
+            <nav id="lessonNav" class="side-nav"></nav>
+          </aside>
+          <div id="lessonContent"></div>
+        </div>
+      </section>
+
+      <section id="practice" class="view">
+        <div class="quiz-shell">
+          <div class="quiz-top">
+            <div><div class="eyebrow">Instant-feedback simulator</div><h1>Practice under pressure.</h1><p class="lede">Answer scenario-based questions and see the correct answer with an explanation immediately.</p></div>
+            <div class="scorebox"><strong id="liveScore">0 / 0</strong><span>Session score</span></div>
+          </div>
+          <div class="filters" id="quizFilters"></div>
+          <article class="quiz-card">
+            <div class="quiz-meta"><span id="quizSection">Section 1</span><span id="quizCount">Question 1</span></div>
+            <div class="progress-bar"><i id="quizProgress"></i></div>
+            <h2 class="prompt" id="quizPrompt"></h2>
+            <div id="optionList" class="option-list"></div>
+            <div id="feedback" class="feedback"></div>
+            <div class="quiz-actions">
+              <small id="multiHint"></small>
+              <div>
+                <button class="btn" id="checkBtn" hidden>Check answer</button>
+                <button class="btn primary" id="nextBtn">Next question →</button>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+    <footer>Built from the repository’s Spring ’26-aligned roadmap, training material, and section quizzes. Progress stays in this browser.</footer>
+  </div>
+
+  <script>
+    const DATA = __STUDY_DATA__;
+    const SECTION_NAMES = {
+      1: "Solution Positioning", 2: "Setup & Administration", 3: "Connection & Ingestion",
+      4: "Harmonization & Unification", 5: "Enhancements & Analysis", 6: "Activation & Utilization"
+    };
+    const defaultState = { completed: [], bookmark: { type: "stage", id: 1 }, answered: {}, quizSection: 0, quizIndex: 0 };
+    let state;
+    try { state = { ...defaultState, ...JSON.parse(localStorage.getItem("data360-study-state") || "{}") }; }
+    catch { state = structuredClone(defaultState); }
+    let currentLesson = state.bookmark.type === "lesson" ? state.bookmark.id : 1;
+    let currentPool = [];
+    let currentQuestion = null;
+    let selected = [];
+    let revealed = false;
+    let session = { right: 0, total: 0 };
+
+    const $ = (selector) => document.querySelector(selector);
+    const $$ = (selector) => [...document.querySelectorAll(selector)];
+    const esc = (value) => String(value).replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+    function save() {
+      localStorage.setItem("data360-study-state", JSON.stringify(state));
+      $("#savedPill").classList.add("show");
+      clearTimeout(save.timer); save.timer = setTimeout(() => $("#savedPill").classList.remove("show"), 1200);
+      renderStats();
+    }
+    function switchView(id) {
+      $$(".view").forEach(v => v.classList.toggle("active", v.id === id));
+      $$(".tab").forEach(t => t.classList.toggle("active", t.dataset.view === id));
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+    $$(".tab").forEach(tab => tab.addEventListener("click", () => switchView(tab.dataset.view)));
+
+    function renderRoadmap() {
+      $("#roadmapList").innerHTML = DATA.stages.map(stage => `
+        <article class="stage ${state.completed.includes(stage.id) ? "done" : ""}" data-stage="${stage.id}">
+          <div class="stage-num">${String(stage.id).padStart(2, "0")}</div>
+          <div>
+            <h3>${esc(stage.title)}</h3>
+            <p>${esc(stage.goal || (stage.id === 7 ? "Build the full connect-to-activate workflow in a practice org." : "Consolidate weak areas and rehearse exam decisions."))}</p>
+            <div class="chips"><span class="chip">${stage.hours}</span>${stage.weight ? `<span class="chip weight">${stage.weight}% exam</span>` : ""}</div>
+          </div>
+          <button class="check" aria-label="Mark stage ${stage.id} complete"></button>
+        </article>`).join("");
+      $$(".stage").forEach(card => {
+        card.addEventListener("click", e => {
+          const id = Number(card.dataset.stage);
+          if (e.target.closest(".check")) {
+            state.completed = state.completed.includes(id) ? state.completed.filter(x => x !== id) : [...state.completed, id];
+            save(); renderRoadmap(); return;
+          }
+          if (id <= 6) { currentLesson = id; state.bookmark = { type: "lesson", id }; save(); renderLessons(); switchView("learn"); }
+        });
+      });
+    }
+
+    function renderLessons(query = "") {
+      $("#lessonNav").innerHTML = DATA.training.map(s => `<button class="${s.id === currentLesson ? "active" : ""}" data-section="${s.id}">S${s.id} · ${esc(SECTION_NAMES[s.id])}</button>`).join("");
+      $$("#lessonNav button").forEach(btn => btn.onclick = () => {
+        currentLesson = Number(btn.dataset.section);
+        state.bookmark = { type: "lesson", id: currentLesson }; save(); renderLessons($("#lessonSearch").value);
+      });
+      const section = DATA.training.find(s => s.id === currentLesson);
+      const term = query.trim().toLowerCase();
+      const cards = section.cards.filter(card => !term || `${card.title} ${card.facts.join(" ")} ${card.why}`.toLowerCase().includes(term));
+      $("#lessonContent").innerHTML = `
+        <div class="lesson-intro"><div class="eyebrow">Section ${section.id}</div><h2>${esc(SECTION_NAMES[section.id])}</h2><p>${section.cards.length} focused concept cards · ${DATA.stages.find(s => s.id === section.id)?.weight}% of the exam</p></div>
+        ${cards.length ? cards.map((card, i) => `
+          <article class="lesson-card" id="lesson-${section.id}-${i}">
+            <button class="bookmark ${state.bookmark.card === `${section.id}-${i}` ? "saved" : ""}" data-bookmark="${section.id}-${i}" title="Bookmark this lesson">◆</button>
+            <h3>${esc(card.title)}</h3>
+            <ul>${card.facts.map(f => `<li>${esc(f)}</li>`).join("")}</ul>
+            ${card.why ? `<div class="why"><strong>Exam lens:</strong> ${esc(card.why)}</div>` : ""}
+          </article>`).join("") : `<div class="empty">No concepts match “${esc(query)}”.</div>`}`;
+      $$(".bookmark").forEach(btn => btn.onclick = () => {
+        state.bookmark = { type: "lesson", id: currentLesson, card: btn.dataset.bookmark };
+        save(); renderLessons($("#lessonSearch").value);
+      });
+      if (!query && state.bookmark.card?.startsWith(`${currentLesson}-`)) {
+        setTimeout(() => document.getElementById(`lesson-${state.bookmark.card}`)?.scrollIntoView({ block: "center" }), 50);
+      }
+    }
+    $("#lessonSearch").addEventListener("input", e => renderLessons(e.target.value));
+
+    function setPool(section = 0, preserveIndex = false) {
+      state.quizSection = section;
+      currentPool = DATA.questions.filter(q => !section || q.section === section);
+      if (!preserveIndex) state.quizIndex = 0;
+      if (state.quizIndex >= currentPool.length) state.quizIndex = 0;
+      renderFilters();
+      loadQuestion();
+    }
+    function renderFilters() {
+      $("#quizFilters").innerHTML = `<button class="filter ${state.quizSection === 0 ? "active" : ""}" data-section="0">Mixed · ${DATA.questions.length}</button>` +
+        DATA.training.map(s => `<button class="filter ${state.quizSection === s.id ? "active" : ""}" data-section="${s.id}">S${s.id} · ${DATA.questions.filter(q => q.section === s.id).length}</button>`).join("");
+      $$("#quizFilters .filter").forEach(btn => btn.onclick = () => { setPool(Number(btn.dataset.section)); save(); });
+    }
+    function loadQuestion() {
+      currentQuestion = currentPool[state.quizIndex];
+      selected = []; revealed = false;
+      if (!currentQuestion) return;
+      $("#quizSection").textContent = `S${currentQuestion.section} · ${SECTION_NAMES[currentQuestion.section]}`;
+      $("#quizCount").textContent = `Question ${state.quizIndex + 1} of ${currentPool.length}`;
+      $("#quizProgress").style.width = `${((state.quizIndex + 1) / currentPool.length) * 100}%`;
+      $("#quizPrompt").textContent = currentQuestion.prompt;
+      $("#multiHint").textContent = currentQuestion.multi ? "Select two answers, then check." : "Choose the best answer.";
+      $("#checkBtn").hidden = !currentQuestion.multi;
+      $("#checkBtn").disabled = true;
+      $("#nextBtn").textContent = state.quizIndex === currentPool.length - 1 ? "Start again ↻" : "Next question →";
+      $("#feedback").className = "feedback"; $("#feedback").innerHTML = "";
+      renderOptions();
+      state.bookmark = { type: "question", id: currentQuestion.id };
+      save();
+    }
+    function renderOptions() {
+      $("#optionList").innerHTML = currentQuestion.options.map(option => {
+        let cls = selected.includes(option.key) ? "selected" : "";
+        if (revealed && currentQuestion.correct.includes(option.key)) cls = "correct";
+        else if (revealed && selected.includes(option.key)) cls = "wrong";
+        return `<button class="option ${cls}" data-key="${option.key}" ${revealed ? "disabled" : ""}><span class="letter">${option.key}</span><span>${esc(option.text)}</span></button>`;
+      }).join("");
+      $$("#optionList .option").forEach(btn => btn.onclick = () => selectOption(btn.dataset.key));
+    }
+    function selectOption(key) {
+      if (revealed) return;
+      if (currentQuestion.multi) {
+        selected = selected.includes(key) ? selected.filter(x => x !== key) : selected.length < currentQuestion.correct.length ? [...selected, key] : selected;
+        $("#checkBtn").disabled = selected.length !== currentQuestion.correct.length;
+        renderOptions();
+      } else {
+        selected = [key]; reveal();
+      }
+    }
+    function reveal() {
+      if (!selected.length || revealed) return;
+      revealed = true;
+      const isRight = [...selected].sort().join() === [...currentQuestion.correct].sort().join();
+      session.total++; if (isRight) session.right++;
+      state.answered[currentQuestion.id] = { right: isRight, at: Date.now() };
+      const box = $("#feedback");
+      box.className = `feedback show ${isRight ? "good" : "bad"}`;
+      box.innerHTML = `<strong>${isRight ? "Correct." : `Not quite. The answer is ${currentQuestion.correct.join(" & ")}.`}</strong><br>${esc(currentQuestion.explanation)}`;
+      $("#liveScore").textContent = `${session.right} / ${session.total}`;
+      $("#checkBtn").hidden = true;
+      renderOptions(); save();
+    }
+    $("#checkBtn").onclick = reveal;
+    $("#nextBtn").onclick = () => {
+      state.quizIndex = (state.quizIndex + 1) % currentPool.length;
+      loadQuestion();
+    };
+
+    function renderStats() {
+      const answers = Object.values(state.answered);
+      const right = answers.filter(a => a.right).length;
+      $("#stageMetric").textContent = `${state.completed.length} / 8`;
+      $("#questionMetric").textContent = answers.length;
+      $("#accuracyMetric").textContent = answers.length ? `${Math.round(right / answers.length * 100)}%` : "—";
+      const bookmark = state.bookmark;
+      if (bookmark.type === "question") {
+        const q = DATA.questions.find(q => q.id === bookmark.id);
+        $("#resumeTitle").textContent = q ? `Practice · S${q.section}` : "Practice test";
+        $("#resumeCopy").textContent = q ? `Return to question ${q.number} in ${SECTION_NAMES[q.section]}.` : "Continue your practice session.";
+      } else {
+        const id = bookmark.id || 1;
+        $("#resumeTitle").textContent = `Stage ${id} · ${SECTION_NAMES[id] || "Capstone"}`;
+        $("#resumeCopy").textContent = DATA.stages.find(s => s.id === id)?.goal || "Continue your guided study plan.";
+      }
+    }
+    function resume() {
+      if (state.bookmark.type === "question") {
+        const q = DATA.questions.find(q => q.id === state.bookmark.id);
+        if (q) { state.quizSection = q.section; currentPool = DATA.questions.filter(x => x.section === q.section); state.quizIndex = currentPool.findIndex(x => x.id === q.id); renderFilters(); loadQuestion(); switchView("practice"); return; }
+      }
+      currentLesson = Math.min(state.bookmark.id || 1, 6); renderLessons(); switchView("learn");
+    }
+    $("#resumeBtn").onclick = resume; $("#heroResume").onclick = resume;
+    $("#resetBtn").onclick = () => {
+      if (!confirm("Reset all stage progress, bookmarks, and practice history?")) return;
+      state = structuredClone(defaultState); session = { right: 0, total: 0 };
+      $("#liveScore").textContent = "0 / 0"; save(); renderRoadmap(); renderLessons(); setPool(0);
+    };
+
+    renderRoadmap();
+    renderLessons();
+    const bookmarkedQ = DATA.questions.find(q => q.id === state.bookmark.id);
+    if (bookmarkedQ) {
+      state.quizSection = bookmarkedQ.section;
+      currentPool = DATA.questions.filter(q => q.section === bookmarkedQ.section);
+      state.quizIndex = currentPool.findIndex(q => q.id === bookmarkedQ.id);
+      renderFilters(); loadQuestion();
+    } else setPool(state.quizSection || 0, true);
+    renderStats();
+  </script>
+</body>
+</html>

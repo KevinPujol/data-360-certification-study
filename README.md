@@ -10,12 +10,15 @@ Spring '26. Data 360 is the Dreamforce 2025 rebrand of "Data Cloud."
 
 ## 🎯 Start here
 
-1. Open **[roadmap.md](roadmap.md)** — your trackable, dependency-ordered study
+1. Open **[study-hub.html](study-hub.html)** for the interactive, offline study
+   dashboard with saved progress, bookmarks, training notes, and instant-feedback
+   practice tests.
+2. Use **[roadmap.md](roadmap.md)** as the plain-text, dependency-ordered study
    plan. Work the 8 stages in order and check the boxes as you go.
-2. For each stage, read the matching section of
+3. For each stage, read the matching section of
    **[training-material.md](training-material.md)** and do the linked Trailhead
    modules.
-3. Take the gating **[quiz](quizzes/)** before advancing to the next stage.
+4. Take the gating **[quiz](quizzes/)** before advancing to the next stage.
 
 ## 📁 What's in here
 
